@@ -1,9 +1,18 @@
-#include <iostream>
+#include "Constants.h"
+#include "Game.h"
 
 int main(int argc, char *args[]) {
-    //TODO:
-    //Add game logic
+    Game *game = new Game();
 
-    std::cout << "Game is running..." << std::endl;
+    game->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    while(game->IsRunning()) {
+        game->ProcessInput();
+        game->Update();
+        game->Render();
+    }
+
+    game->Destroy();
+
     return 0;
 }
