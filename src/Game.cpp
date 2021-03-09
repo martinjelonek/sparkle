@@ -15,8 +15,8 @@ bool Game::IsRunning() const {
 
 float projectilePosX = 0.0f;
 float projectilePosY = 0.0f;
-float projectileVelX = 10.0f;
-float projectileVelY = 10.0f;
+float projectileVelX = 0.25f;
+float projectileVelY = 0.25f;
 
 void Game::Initialize(int width, int height) {
     //initialize SDL
