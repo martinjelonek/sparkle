@@ -2,4 +2,4 @@
 
 ## The 2D Game Engine
 
-With the use of _C++_, _SDL_ and _LUA_.
+With the use of _C++_, _SDL_ and _Lua_.
