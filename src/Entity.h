@@ -1,20 +1,21 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include "./Component.h"
+#include "./EntityManager.h"
 #include <vector>
 #include <string>
 
 using namespace std;
 
-class EntityManager;
 class Component;
+class EntityManager;
 
-class Entity{
+class Entity {
     private:
-        EntityManager& manager;
         bool isActive;
+        EntityManager& manager;
         vector<Component*> components;
-
     public:
         string name;
         Entity(EntityManager& manager);
@@ -22,8 +23,7 @@ class Entity{
         void Update(float deltaTime);
         void Render();
         void Destroy();
-        bool isActive() const;
-    
+        bool IsActive() const;
 };
 
 #endif

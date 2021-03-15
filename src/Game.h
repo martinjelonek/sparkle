@@ -5,18 +5,20 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "./Entity.h"
+#include "./Component.h"
+#include "./EntityManager.h"
+
 class Game {
     private:
-        bool isRunning;
-        
+        bool isRunning;        
         SDL_Window *window;
-        SDL_Renderer *renderer;
     public:
         Game();
         ~Game();
-
-        int ticksLastFrame = 0;
-        
+        int ticksLastFrame = 0;        
+        static SDL_Renderer *renderer;
+        void LoadLevel(int levelNumber);
         bool IsRunning() const;
         void Initialize(int width, int height);
         void ProcessInput ();

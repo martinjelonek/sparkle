@@ -5,6 +5,9 @@
 
 using namespace glm;
 
+EntityManager manager;
+SDL_Renderer* Game::renderer;
+
 Game::Game() {
     this->isRunning = false;
 }
@@ -15,9 +18,6 @@ Game::~Game() {
 bool Game::IsRunning() const {
     return this->isRunning;
 }
-
-vec2 projectilePos = vec2(0.0f, 0.0f);
-vec2 projectileVel = vec2(20.0f, 30.0f);
 
 void Game::Initialize(int width, int height) {
     //initialize SDL
@@ -72,25 +72,16 @@ void Game::Update() {
     //set current ticks for the next update
     ticksLastFrame = SDL_GetTicks();
 
-    projectilePos = vec2(
-        projectilePos.x + projectileVel.x * deltaTime,
-        projectilePos.y + projectileVel.y * deltaTime
-    );
+    //TODO:
+    //call the manager.update to update all entities as a function of deltatime
 }
 
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
 
-    SDL_Rect projectile {
-        (int) projectilePos.x,
-        (int) projectilePos.y,
-        10,
-        10
-    };
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &projectile);
+    //TODO:
+    //call the manager.render to render all entities
 
     SDL_RenderPresent(renderer);
 }
@@ -100,3 +91,4 @@ void Game::Destroy() {
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
+
