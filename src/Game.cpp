@@ -1,5 +1,6 @@
 #include <iostream>
 #include "./Constants.h"
+#include "./Components/TransformComponent.h"
 #include "./Game.h"
 #include "../lib/glm/glm.hpp"
 
@@ -37,8 +38,15 @@ void Game::Initialize(int width, int height) {
         std::cerr << "Error creating SDL renderer." << std::endl;
     }
 
+    LoadLevel(0);
+
     isRunning = true;
     return;
+}
+
+void Game::LoadLevel(int levelNumber) {
+    Entity& newEntity(manager.AddEntity("projectile"));
+    newEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
 }
 
 void Game::ProcessInput() {
@@ -72,16 +80,15 @@ void Game::Update() {
     //set current ticks for the next update
     ticksLastFrame = SDL_GetTicks();
 
-    //TODO:
-    //call the manager.update to update all entities as a function of deltatime
+    manager.Update(deltaTime);
 }
 
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
 
-    //TODO:
-    //call the manager.render to render all entities
+    if (manager.HasNoEntities()) return;
+    manager.Render();
 
     SDL_RenderPresent(renderer);
 }
