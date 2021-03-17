@@ -70,9 +70,10 @@ void Game::LoadLevel(int levelNumber) {
     newEntity4.AddComponent<TransformComponent>(100, 300, 15, -15, 32, 32, 1);
     newEntity4.AddComponent<SpriteComponent>("tank-image");
 
-    //cout list of all entities
-    manager.ListAllEntities();
-    cout << "HAS_NO_ENTITIES -> " << manager.HasNoEntities() << endl;
+    #ifdef DEBUG
+        manager.ListAllEntities();
+        cout << "HAS_NO_ENTITIES -> " << manager.HasNoEntities() << endl;
+    #endif
 }
 
 void Game::ProcessInput() {

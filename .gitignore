@@ -1,2 +1,8 @@
+#build files
 game
+
+#vscode auto generated files
 *.json
+
+#alternative files
+alt_*
