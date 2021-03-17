@@ -1,5 +1,6 @@
-#include "Constants.h"
-#include "Game.h"
+#include <iostream>
+#include "./Constants.h"
+#include "./Game.h"
 
 int main(int argc, char *args[]) {
     Game game;

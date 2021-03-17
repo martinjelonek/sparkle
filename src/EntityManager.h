@@ -6,19 +6,20 @@
 #include <string>
 #include <vector>
 
-//using namespace std;
+using namespace std;
 
 class EntityManager {
     private:
-        std::vector<Entity*> entities;
+        vector<Entity*> entities;
     public:
         void ClearData();
         void Update(float deltaTime);
         void Render();
-        bool HasNoEntities();
-        Entity& AddEntity(std::string entityName);        
-        std::vector<Entity*> GetEntities() const;
-        unsigned int GetEntityCount();
+        bool HasNoEntities() const;
+        unsigned int GetEntityCount() const;
+        void ListAllEntities() const;       
+        vector<Entity*> GetEntities() const;
+        Entity& AddEntity(string entityName);       
 };
 
 #endif

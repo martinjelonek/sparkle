@@ -1,12 +1,16 @@
-#include <iostream>
-#include "./Constants.h"
-#include "./Components/TransformComponent.h"
 #include "./Game.h"
+#include "./Constants.h"
+#include "./AssetManager.h"
+#include "./Components/TransformComponent.h"
+#include "./Components/SpriteComponent.h"
 #include "../lib/glm/glm.hpp"
+#include <iostream>
 
 using namespace glm;
+using namespace std;
 
 EntityManager manager;
+AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
 
 Game::Game() {
@@ -23,19 +27,19 @@ bool Game::IsRunning() const {
 void Game::Initialize(int width, int height) {
     //initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        std::cerr << "Error initializing SDL." << std::endl;
+        cerr << "Error initializing SDL." << endl;
         return;
     }
     
     //create SDL window
     window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);    
     if(!window) {
-        std::cerr << "Error creating SDL window." << std::endl;
+        cerr << "Error creating SDL window." << endl;
         return;
     }
     renderer = SDL_CreateRenderer(window, -1, 0);
     if(!renderer) {
-        std::cerr << "Error creating SDL renderer." << std::endl;
+        cerr << "Error creating SDL renderer." << endl;
     }
 
     LoadLevel(0);
@@ -45,8 +49,30 @@ void Game::Initialize(int width, int height) {
 }
 
 void Game::LoadLevel(int levelNumber) {
-    Entity& newEntity(manager.AddEntity("projectile"));
+    //Adding new assets to the assetmanager list (map)
+    string textureFilePath = "./assets/images/tank-big-right.png";
+    assetManager->AddTexture("tank-image", textureFilePath.c_str());
+
+    //Adding entities with components
+    Entity& newEntity(manager.AddEntity("tank"));
     newEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+    newEntity.AddComponent<SpriteComponent>("tank-image");
+
+    Entity& newEntity2(manager.AddEntity("tank2"));
+    newEntity2.AddComponent<TransformComponent>(100, 100, 0, 0, 32, 32, 1);
+    newEntity2.AddComponent<SpriteComponent>("tank-image");
+
+    Entity& newEntity3(manager.AddEntity("tank3"));
+    newEntity3.AddComponent<TransformComponent>(200, 200, -20, -20, 32, 32, 1);
+    newEntity3.AddComponent<SpriteComponent>("tank-image");
+
+    Entity& newEntity4(manager.AddEntity("tank4"));
+    newEntity4.AddComponent<TransformComponent>(100, 300, 15, -15, 32, 32, 1);
+    newEntity4.AddComponent<SpriteComponent>("tank-image");
+
+    //cout list of all entities
+    manager.ListAllEntities();
+    cout << "HAS_NO_ENTITIES -> " << manager.HasNoEntities() << endl;
 }
 
 void Game::ProcessInput() {

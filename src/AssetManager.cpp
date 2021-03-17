@@ -1,4 +1,5 @@
 #include "./AssetManager.h"
+#include "./Components/TransformComponent.h"
 
 AssetManager::AssetManager(EntityManager* manager): manager(manager) {
 
@@ -15,4 +16,3 @@ void AssetManager::AddTexture(string textureId, const char* filePath) {
 SDL_Texture* AssetManager::GetTexture(string textureId) {
     return textures[textureId];
 }
-

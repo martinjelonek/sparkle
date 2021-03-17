@@ -26,11 +26,11 @@ class Entity {
         void Render();
         void Destroy();
         bool IsActive() const;
+        void ListAllComponents() const;
 
         template <typename T, typename... TArgs>
         T& AddComponent(TArgs&&... args) {
             T* newComponent(new T(forward<TArgs>(args)...));
-
             newComponent->owner = this;
             components.emplace_back(newComponent);
             componentTypeMap[&typeid(*newComponent)] = newComponent;
