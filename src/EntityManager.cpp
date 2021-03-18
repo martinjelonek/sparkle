@@ -33,17 +33,19 @@ vector<Entity*> EntityManager::GetEntities() const {
     return entities;
 }
 
-void EntityManager::ListAllEntities() const {
-    unsigned int i = 0;
-    for (auto& entity: entities) {
-        cout << "Entity " << i << ".:   " << entity->name << endl;
-        entity->ListAllComponents();
-        i++;
-    }
-}
-
 Entity& EntityManager::AddEntity(string entityName) {
     Entity *entity = new Entity(*this, entityName);
     entities.emplace_back(entity);
     return *entity;
 }
+
+#ifdef DEBUG
+    void EntityManager::ListAllEntities() const {
+        unsigned int i = 0;
+        for (auto& entity: entities) {
+            cout << "...Entity " << i << " : <" << entity->name << ">" << endl;
+            entity->ListAllComponents();
+            i++;
+        }
+    }
+#endif

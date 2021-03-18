@@ -33,9 +33,10 @@ bool Entity::IsActive() const {
     return this->isActive;
 }
 
-void Entity::ListAllComponents() const {
-    for(auto mapElement: componentTypeMap) {
-        cout << "      Component<" << mapElement.first->name() << ">" << endl;
+#ifdef DEBUG
+    void Entity::ListAllComponents() const {
+        for(auto mapElement: componentTypeMap) {
+            cout << "......ENTITY_CPP-LISTALLCOMPONENTS: <" << mapElement.first->name() << ">" << endl;
+        }
     }
-    cout << endl;
-}
+#endif

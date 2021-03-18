@@ -5,6 +5,9 @@
 #include "./TransformComponent.h"
 #include "../TextureManager.h"
 #include <SDL2/SDL.h>
+#include <iostream>
+
+using namespace std;
 
 class SpriteComponent: public Component {
     private:
@@ -28,7 +31,7 @@ class SpriteComponent: public Component {
             sourceRectangle.x = 0;
             sourceRectangle.y = 0;
             sourceRectangle.w = transform->width;
-            sourceRectangle.y = transform->height;
+            sourceRectangle.h = transform->height;
         }
 
         void Update(float deltaTime) {
@@ -36,10 +39,16 @@ class SpriteComponent: public Component {
             destinationRectangle.y = (int) transform->position.y;
             destinationRectangle.w = transform->width * transform->scale;
             destinationRectangle.h = transform->height * transform->scale;
+            #ifdef DEBUG
+                cout << "...SPRITECOMPONENT_H-UPDATE: " << this->owner << endl;
+            #endif
         }
 
         void Render() override {
             TextureManager::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
+            #ifdef DEBUG
+                cout << "...SPRITECOMPONENT_H-RENDER: " << this->owner << endl; 
+            #endif
         }
 };
 

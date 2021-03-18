@@ -50,7 +50,7 @@ void Game::Initialize(int width, int height) {
 
 void Game::LoadLevel(int levelNumber) {
     //Adding new assets to the assetmanager list (map)
-    string textureFilePath = "./assets/images/tank-big-right.png";
+    string textureFilePath = "./assets/images/catapult-big-right.png";
     assetManager->AddTexture("tank-image", textureFilePath.c_str());
 
     //Adding entities with components
@@ -71,8 +71,8 @@ void Game::LoadLevel(int levelNumber) {
     newEntity4.AddComponent<SpriteComponent>("tank-image");
 
     #ifdef DEBUG
+        cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << endl;
         manager.ListAllEntities();
-        cout << "HAS_NO_ENTITIES -> " << manager.HasNoEntities() << endl;
     #endif
 }
 
@@ -125,4 +125,3 @@ void Game::Destroy() {
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
-
