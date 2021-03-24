@@ -50,8 +50,7 @@ void Game::Initialize(int width, int height) {
 
 void Game::LoadLevel(int levelNumber) {
     //Adding new assets to the assetmanager list (map)
-    string textureFilePath = "./assets/images/catapult-big-right.png";
-    assetManager->AddTexture("tank-image", textureFilePath.c_str());
+    assetManager->AddTexture("tank-image", string("./assets/images/catapult-big-right.png").c_str());
 
     //Adding entities with components
     Entity& newEntity(manager.AddEntity("tank"));
