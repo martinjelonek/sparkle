@@ -1,5 +1,5 @@
 #include "./Entity.h"
-#include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -30,5 +30,13 @@ void Entity::Destroy() {
 }
 
 bool Entity::IsActive() const {
-    return isActive;
+    return this->isActive;
 }
+
+#ifdef DEBUG
+    void Entity::ListAllComponents() const {
+        for(auto mapElement: componentTypeMap) {
+            cout << "......ENTITY_CPP-LISTALLCOMPONENTS: <" << mapElement.first->name() << ">" << endl;
+        }
+    }
+#endif

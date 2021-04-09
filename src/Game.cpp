@@ -1,12 +1,16 @@
-#include <iostream>
-#include "./Constants.h"
-#include "./Components/TransformComponent.h"
 #include "./Game.h"
+#include "./Constants.h"
+#include "./AssetManager.h"
+#include "./Components/TransformComponent.h"
+#include "./Components/SpriteComponent.h"
 #include "../lib/glm/glm.hpp"
+#include <iostream>
 
 using namespace glm;
+using namespace std;
 
 EntityManager manager;
+AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
 
 Game::Game() {
@@ -23,19 +27,19 @@ bool Game::IsRunning() const {
 void Game::Initialize(int width, int height) {
     //initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        std::cerr << "Error initializing SDL." << std::endl;
+        cerr << "Error initializing SDL." << endl;
         return;
     }
     
     //create SDL window
     window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);    
     if(!window) {
-        std::cerr << "Error creating SDL window." << std::endl;
+        cerr << "Error creating SDL window." << endl;
         return;
     }
     renderer = SDL_CreateRenderer(window, -1, 0);
     if(!renderer) {
-        std::cerr << "Error creating SDL renderer." << std::endl;
+        cerr << "Error creating SDL renderer." << endl;
     }
 
     LoadLevel(0);
@@ -45,8 +49,23 @@ void Game::Initialize(int width, int height) {
 }
 
 void Game::LoadLevel(int levelNumber) {
-    Entity& newEntity(manager.AddEntity("projectile"));
-    newEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+    //Adding new assets to the assetmanager list (map)
+    assetManager->AddTexture("catapult-image", string("./assets/images/catapult-big-right.png").c_str());
+    assetManager->AddTexture("wildhammer-image", string("./assets/images/wildhammer.png").c_str());
+
+    //Adding entities with components
+    Entity& catapultEntity(manager.AddEntity("catapult"));
+    catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+    catapultEntity.AddComponent<SpriteComponent>("catapult-image");
+
+    Entity& wildhammerEntity(manager.AddEntity("wildhammer-image"));
+    wildhammerEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
+    wildhammerEntity.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
+
+    #ifdef DEBUG
+        cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << endl;
+        manager.ListAllEntities();
+    #endif
 }
 
 void Game::ProcessInput() {
@@ -98,4 +117,3 @@ void Game::Destroy() {
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
-

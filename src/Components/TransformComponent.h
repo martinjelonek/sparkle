@@ -5,6 +5,7 @@
 #include "../Game.h"
 #include "../../lib/glm/glm.hpp"
 #include <SDL2/SDL.h>
+#include <iostream>
 
 using namespace glm;
 
@@ -22,6 +23,9 @@ class TransformComponent: public Component {
             width = w;
             height = h;
             scale = s;
+            #ifdef DEBUG
+                cout << "......TRANSFORMCOMPONENT_H:" << posX << "-"<< posY << "-"<< velX << "-" << velY << "-" << w << "-" << h << "-" << s << endl;
+            #endif
         }
 
         void Initialize() override{
@@ -31,17 +35,6 @@ class TransformComponent: public Component {
         void Update(float deltaTime) override {
             position.x += velocity.x * deltaTime;
             position.y += velocity.y * deltaTime;
-        } 
-
-        void Render() override {
-            SDL_Rect transformRectangle = {
-                (int) position.x,
-                (int) position.y,
-                width,
-                height
-            };
-            SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, 255);
-            SDL_RenderFillRect(Game::renderer, &transformRectangle);
         }
 };
 
