@@ -50,24 +50,17 @@ void Game::Initialize(int width, int height) {
 
 void Game::LoadLevel(int levelNumber) {
     //Adding new assets to the assetmanager list (map)
-    assetManager->AddTexture("tank-image", string("./assets/images/catapult-big-right.png").c_str());
+    assetManager->AddTexture("catapult-image", string("./assets/images/catapult-big-right.png").c_str());
+    assetManager->AddTexture("wildhammer-image", string("./assets/images/wildhammer.png").c_str());
 
     //Adding entities with components
-    Entity& newEntity(manager.AddEntity("tank"));
-    newEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
-    newEntity.AddComponent<SpriteComponent>("tank-image");
+    Entity& catapultEntity(manager.AddEntity("catapult"));
+    catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+    catapultEntity.AddComponent<SpriteComponent>("catapult-image");
 
-    Entity& newEntity2(manager.AddEntity("tank2"));
-    newEntity2.AddComponent<TransformComponent>(100, 100, 0, 0, 32, 32, 1);
-    newEntity2.AddComponent<SpriteComponent>("tank-image");
-
-    Entity& newEntity3(manager.AddEntity("tank3"));
-    newEntity3.AddComponent<TransformComponent>(200, 200, -20, -20, 32, 32, 1);
-    newEntity3.AddComponent<SpriteComponent>("tank-image");
-
-    Entity& newEntity4(manager.AddEntity("tank4"));
-    newEntity4.AddComponent<TransformComponent>(100, 300, 15, -15, 32, 32, 1);
-    newEntity4.AddComponent<SpriteComponent>("tank-image");
+    Entity& wildhammerEntity(manager.AddEntity("wildhammer-image"));
+    wildhammerEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
+    wildhammerEntity.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
 
     #ifdef DEBUG
         cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << endl;
