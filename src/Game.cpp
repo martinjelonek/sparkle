@@ -3,6 +3,7 @@
 #include "./AssetManager.h"
 #include "./Components/TransformComponent.h"
 #include "./Components/SpriteComponent.h"
+#include "./Components/KeyboardControlComponent.h"
 #include "../lib/glm/glm.hpp"
 #include <iostream>
 
@@ -12,6 +13,7 @@ using namespace std;
 EntityManager manager;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
+SDL_Event Game::event;
 
 Game::Game() {
     this->isRunning = false;
@@ -54,13 +56,14 @@ void Game::LoadLevel(int levelNumber) {
     assetManager->AddTexture("wildhammer-image", string("./assets/images/wildhammer.png").c_str());
 
     //Adding entities with components
-    Entity& catapultEntity(manager.AddEntity("catapult"));
-    catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
-    catapultEntity.AddComponent<SpriteComponent>("catapult-image");
-
     Entity& wildhammerEntity(manager.AddEntity("wildhammer-image"));
     wildhammerEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
     wildhammerEntity.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
+    wildhammerEntity.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
+
+    Entity& catapultEntity(manager.AddEntity("catapult"));
+    catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+    catapultEntity.AddComponent<SpriteComponent>("catapult-image");
 
     #ifdef DEBUG
         cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << endl;
@@ -69,7 +72,6 @@ void Game::LoadLevel(int levelNumber) {
 }
 
 void Game::ProcessInput() {
-    SDL_Event event;
     SDL_PollEvent(&event);
     switch (event.type)
     {
