@@ -7,15 +7,13 @@
 #include "../Components/TransformComponent.h"
 #include "../Components/SpriteComponent.h"
 
-using namespace std;
-
 class KeyboardControlComponent: public Component {
     public:
-        string upKey;
-        string downKey;
-        string rightKey;
-        string leftKey;
-        string shootKey;
+        std::string upKey;
+        std::string downKey;
+        std::string rightKey;
+        std::string leftKey;
+        std::string shootKey;
         TransformComponent *transform;
         SpriteComponent *sprite;
 
@@ -23,7 +21,7 @@ class KeyboardControlComponent: public Component {
 
         }
 
-        KeyboardControlComponent (string upKey, string rightKey, string downKey, string leftKey, string shootKey) {
+        KeyboardControlComponent (std::string upKey, std::string rightKey, std::string downKey, std::string leftKey, std::string shootKey) {
             this->upKey = GetSDLKeyStringCode(upKey);
             this->rightKey = GetSDLKeyStringCode(rightKey);
             this->downKey = GetSDLKeyStringCode(downKey);
@@ -31,13 +29,13 @@ class KeyboardControlComponent: public Component {
             this->shootKey = GetSDLKeyStringCode(shootKey);
         }
 
-        string GetSDLKeyStringCode(string key) {
+        std::string GetSDLKeyStringCode(std::string key) {
             if (key.compare("up") == 0) return "1073741906";
             if (key.compare("right") == 0) return "1073741903";
             if (key.compare("down") == 0) return "1073741905";
             if (key.compare("left") == 0) return "1073741904";
             if (key.compare("space") == 0) return "32";
-            return to_string(static_cast<int>(key[0]));
+            return std::to_string(static_cast<int>(key[0]));
         }
 
         void Initialize () override {
@@ -47,7 +45,7 @@ class KeyboardControlComponent: public Component {
 
         void Update (float deltaTime) override {
             if(Game::event.type == SDL_KEYDOWN) {
-                string keyCode = to_string(Game::event.key.keysym.sym);
+                std::string keyCode = std::to_string(Game::event.key.keysym.sym);
 
                 if(keyCode.compare(upKey) == 0) {
                     if (transform->position.y <= 0) {
@@ -96,7 +94,7 @@ class KeyboardControlComponent: public Component {
             }
 
             if(Game::event.type == SDL_KEYUP) {
-                string keyCode = to_string(Game::event.key.keysym.sym);
+                std::string keyCode = std::to_string(Game::event.key.keysym.sym);
 
                 if(keyCode.compare(upKey) == 0) {
                     transform->velocity.y = 0;

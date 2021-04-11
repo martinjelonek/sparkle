@@ -1,8 +1,6 @@
 #include "./EntityManager.h"
 #include <iostream>
 
-using namespace std;
-
 void EntityManager::ClearData() {
     for (auto& entity: entities) {
         entity->Destroy();
@@ -29,11 +27,11 @@ unsigned int EntityManager::GetEntityCount() const {
     return entities.size();
 }
 
-vector<Entity*> EntityManager::GetEntities() const {
+std::vector<Entity*> EntityManager::GetEntities() const {
     return entities;
 }
 
-Entity& EntityManager::AddEntity(string entityName) {
+Entity& EntityManager::AddEntity(std::string entityName) {
     Entity *entity = new Entity(*this, entityName);
     entities.emplace_back(entity);
     return *entity;
@@ -43,7 +41,7 @@ Entity& EntityManager::AddEntity(string entityName) {
     void EntityManager::ListAllEntities() const {
         unsigned int i = 0;
         for (auto& entity: entities) {
-            cout << "...Entity " << i << " : <" << entity->name << ">" << endl;
+            std::cout << "...Entity " << i << " : <" << entity->name << ">" << std::endl;
             entity->ListAllComponents();
             i++;
         }

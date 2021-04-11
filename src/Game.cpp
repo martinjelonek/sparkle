@@ -1,6 +1,7 @@
 #include "./Game.h"
 #include "./Constants.h"
 #include "./AssetManager.h"
+#include "./Map.h"
 #include "./Components/TransformComponent.h"
 #include "./Components/SpriteComponent.h"
 #include "./Components/KeyboardControlComponent.h"
@@ -8,12 +9,12 @@
 #include <iostream>
 
 using namespace glm;
-using namespace std;
 
 EntityManager manager;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
+Map* map;
 
 Game::Game() {
     this->isRunning = false;
@@ -29,19 +30,19 @@ bool Game::IsRunning() const {
 void Game::Initialize(int width, int height) {
     //initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        cerr << "Error initializing SDL." << endl;
+        std::cerr << "Error initializing SDL." << std::endl;
         return;
     }
     
     //create SDL window
     window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);    
     if(!window) {
-        cerr << "Error creating SDL window." << endl;
+        std::cerr << "Error creating SDL window." << std::endl;
         return;
     }
     renderer = SDL_CreateRenderer(window, -1, 0);
     if(!renderer) {
-        cerr << "Error creating SDL renderer." << endl;
+        std::cerr << "Error creating SDL renderer." << std::endl;
     }
 
     LoadLevel(0);
@@ -52,8 +53,12 @@ void Game::Initialize(int width, int height) {
 
 void Game::LoadLevel(int levelNumber) {
     //Adding new assets to the assetmanager list (map)
-    assetManager->AddTexture("catapult-image", string("./assets/images/catapult-big-right.png").c_str());
-    assetManager->AddTexture("wildhammer-image", string("./assets/images/wildhammer.png").c_str());
+    assetManager->AddTexture("catapult-image", std::string("./assets/images/catapult-big-right.png").c_str());
+    assetManager->AddTexture("wildhammer-image", std::string("./assets/images/wildhammer.png").c_str());
+    assetManager->AddTexture("fields-tiletexture", std::string("./assets/tilemaps/fields.png").c_str());
+
+    map = new Map("fields-tiletexture", 1, 32);
+    map->LoadMap("./assets/tilemaps/fields.map", 25, 20);
 
     //Adding entities with components
     Entity& wildhammerEntity(manager.AddEntity("wildhammer-image"));
@@ -66,7 +71,7 @@ void Game::LoadLevel(int levelNumber) {
     catapultEntity.AddComponent<SpriteComponent>("catapult-image");
 
     #ifdef DEBUG
-        cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << endl;
+        std::cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << std::endl;
         manager.ListAllEntities();
     #endif
 }

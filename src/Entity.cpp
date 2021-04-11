@@ -1,13 +1,11 @@
 #include "./Entity.h"
 #include <iostream>
 
-using namespace std;
-
 Entity::Entity(EntityManager& manager): manager(manager) {
     this->isActive = true;
 }
 
-Entity::Entity(EntityManager& manager, string name): manager(manager), name(name) {
+Entity::Entity(EntityManager& manager, std::string name): manager(manager), name(name) {
     this->isActive = true;
 }
 
@@ -36,7 +34,7 @@ bool Entity::IsActive() const {
 #ifdef DEBUG
     void Entity::ListAllComponents() const {
         for(auto mapElement: componentTypeMap) {
-            cout << "......ENTITY_CPP-LISTALLCOMPONENTS: <" << mapElement.first->name() << ">" << endl;
+            std::cout << "......ENTITY_CPP-LISTALLCOMPONENTS: <" << mapElement.first->name() << ">" << std::endl;
         }
     }
 #endif
