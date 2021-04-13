@@ -24,7 +24,7 @@ class TransformComponent: public Component {
             height = h;
             scale = s;
             #ifdef DEBUG
-                cout << "......TRANSFORMCOMPONENT_H:" << posX << "-"<< posY << "-"<< velX << "-" << velY << "-" << w << "-" << h << "-" << s << endl;
+                std::cout << "......TRANSFORMCOMPONENT_H:" << posX << "-"<< posY << "-"<< velX << "-" << velY << "-" << w << "-" << h << "-" << s << std::endl;
             #endif
         }
 

@@ -7,8 +7,6 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
-using namespace std;
-
 class SpriteComponent: public Component {
     private:
         TransformComponent* transform;
@@ -19,8 +17,8 @@ class SpriteComponent: public Component {
         int numFrames;
         int animationSpeed;
         bool isFixed;
-        map<string, Animation> animations;
-        string currentAnimationName;
+        std::map<std::string, Animation> animations;
+        std::string currentAnimationName;
         unsigned int animationIndex = 0;
 
     public:
@@ -32,7 +30,7 @@ class SpriteComponent: public Component {
             SetTexture(filePath);
         }
 
-        SpriteComponent(string id, unsigned int numFrames, unsigned int animationSpeed, bool hasDirections, bool isFixed) {
+        SpriteComponent(std::string id, unsigned int numFrames, unsigned int animationSpeed, bool hasDirections, bool isFixed) {
             this->isAnimated = true;
             this->numFrames = numFrames;
             this->animationSpeed = animationSpeed;
@@ -61,14 +59,14 @@ class SpriteComponent: public Component {
             SetTexture(id);
         }
 
-        void Play(string animationName) {
+        void Play(std::string animationName) {
             numFrames = animations[animationName].numFrames;
             animationIndex = animations[animationName].index;
             animationSpeed = animations[animationName].animationSpeed;
             currentAnimationName = animationName;
         }
 
-        void SetTexture (string assetTextureId) {
+        void SetTexture (std::string assetTextureId) {
             texture = Game::assetManager->GetTexture(assetTextureId);
         }
 
@@ -83,19 +81,19 @@ class SpriteComponent: public Component {
         void Update(float deltaTime) {
             if (isAnimated) sourceRectangle.x = sourceRectangle.w * static_cast<int>((SDL_GetTicks() / animationSpeed) % numFrames);
             sourceRectangle.y = animationIndex * transform->height;
-            destinationRectangle.x = static_cast<int>(transform->position.x);
-            destinationRectangle.y = static_cast<int>(transform->position.y);
+            destinationRectangle.x = static_cast<int>(transform->position.x) - (isFixed ? 0 : Game::camera.x);
+            destinationRectangle.y = static_cast<int>(transform->position.y) - (isFixed ? 0 : Game::camera.y);
             destinationRectangle.w = transform->width * transform->scale;
             destinationRectangle.h = transform->height * transform->scale;
             #ifdef DEBUG
-                cout << "...SPRITECOMPONENT_H-UPDATE: " << this->owner << endl;
+                std::cout << "...SPRITECOMPONENT_H-UPDATE: " << this->owner << std::endl;
             #endif
         }
 
         void Render() override {
             TextureManager::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
             #ifdef DEBUG
-                cout << "...SPRITECOMPONENT_H-RENDER: " << this->owner << endl; 
+                std::cout << "...SPRITECOMPONENT_H-RENDER: " << this->owner << std::endl; 
             #endif
         }
 };

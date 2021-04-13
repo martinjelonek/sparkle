@@ -1,8 +1,6 @@
 #include "./EntityManager.h"
 #include <iostream>
 
-using namespace std;
-
 void EntityManager::ClearData() {
     for (auto& entity: entities) {
         entity->Destroy();
@@ -16,8 +14,10 @@ void EntityManager::Update(float deltaTime) {
 }
 
 void EntityManager::Render() {
-    for (auto& entity: entities) {
-        entity->Render();
+    for (int layerNumber = 0; layerNumber < NUM_LAYERS; layerNumber++) {
+        for (auto& entity: GetEntitiesByLayer(static_cast<LayerType>(layerNumber))) {
+            entity->Render();
+        }
     }
 }
 
@@ -29,12 +29,22 @@ unsigned int EntityManager::GetEntityCount() const {
     return entities.size();
 }
 
-vector<Entity*> EntityManager::GetEntities() const {
+std::vector<Entity*> EntityManager::GetEntities() const {
     return entities;
 }
 
-Entity& EntityManager::AddEntity(string entityName) {
-    Entity *entity = new Entity(*this, entityName);
+std::vector<Entity*> EntityManager::GetEntitiesByLayer(LayerType layer) const {
+    std::vector<Entity*> selectedEntites;
+    for (auto& entity: entities) {
+        if(entity->layer == layer) {
+            selectedEntites.emplace_back(entity);
+        }
+    }
+    return selectedEntites;
+}
+
+Entity& EntityManager::AddEntity(std::string entityName, LayerType layer) {
+    Entity *entity = new Entity(*this, entityName, layer);
     entities.emplace_back(entity);
     return *entity;
 }
@@ -43,7 +53,7 @@ Entity& EntityManager::AddEntity(string entityName) {
     void EntityManager::ListAllEntities() const {
         unsigned int i = 0;
         for (auto& entity: entities) {
-            cout << "...Entity " << i << " : <" << entity->name << ">" << endl;
+            std::cout << "...Entity " << i << " : <" << entity->name << ">" << std::endl;
             entity->ListAllComponents();
             i++;
         }

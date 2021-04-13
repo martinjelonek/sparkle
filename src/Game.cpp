@@ -1,6 +1,7 @@
 #include "./Game.h"
 #include "./Constants.h"
 #include "./AssetManager.h"
+#include "./Map.h"
 #include "./Components/TransformComponent.h"
 #include "./Components/SpriteComponent.h"
 #include "./Components/KeyboardControlComponent.h"
@@ -8,12 +9,13 @@
 #include <iostream>
 
 using namespace glm;
-using namespace std;
 
 EntityManager manager;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
+SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+Map* map;
 
 Game::Game() {
     this->isRunning = false;
@@ -29,19 +31,19 @@ bool Game::IsRunning() const {
 void Game::Initialize(int width, int height) {
     //initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        cerr << "Error initializing SDL." << endl;
+        std::cerr << "Error initializing SDL." << std::endl;
         return;
     }
     
     //create SDL window
     window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);    
     if(!window) {
-        cerr << "Error creating SDL window." << endl;
+        std::cerr << "Error creating SDL window." << std::endl;
         return;
     }
     renderer = SDL_CreateRenderer(window, -1, 0);
     if(!renderer) {
-        cerr << "Error creating SDL renderer." << endl;
+        std::cerr << "Error creating SDL renderer." << std::endl;
     }
 
     LoadLevel(0);
@@ -50,23 +52,28 @@ void Game::Initialize(int width, int height) {
     return;
 }
 
+Entity& player(manager.AddEntity("wildhammer-image", PLAYER_LAYER));
+
 void Game::LoadLevel(int levelNumber) {
     //Adding new assets to the assetmanager list (map)
-    assetManager->AddTexture("catapult-image", string("./assets/images/catapult-big-right.png").c_str());
-    assetManager->AddTexture("wildhammer-image", string("./assets/images/wildhammer.png").c_str());
+    assetManager->AddTexture("catapult-image", std::string("./assets/images/catapult-big-right.png").c_str());
+    assetManager->AddTexture("wildhammer-image", std::string("./assets/images/wildhammer.png").c_str());
+    assetManager->AddTexture("fields-tiletexture", std::string("./assets/tilemaps/fields.png").c_str());
+
+    map = new Map("fields-tiletexture", 2, 32);
+    map->LoadMap("./assets/tilemaps/fields.map", 25, 20);
 
     //Adding entities with components
-    Entity& wildhammerEntity(manager.AddEntity("wildhammer-image"));
-    wildhammerEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
-    wildhammerEntity.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
-    wildhammerEntity.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
+    player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
+    player.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
+    player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
 
-    Entity& catapultEntity(manager.AddEntity("catapult"));
+    Entity& catapultEntity(manager.AddEntity("catapult", ENEMY_LAYER));
     catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
     catapultEntity.AddComponent<SpriteComponent>("catapult-image");
 
     #ifdef DEBUG
-        cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << endl;
+        std::cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << std::endl;
         manager.ListAllEntities();
     #endif
 }
@@ -102,6 +109,8 @@ void Game::Update() {
     ticksLastFrame = SDL_GetTicks();
 
     manager.Update(deltaTime);
+
+    HandleCameraMovement();
 }
 
 void Game::Render() {
@@ -112,6 +121,18 @@ void Game::Render() {
     manager.Render();
 
     SDL_RenderPresent(renderer);
+}
+
+void Game::HandleCameraMovement () {
+    TransformComponent* mainPlayerTransform = player.GetComponent<TransformComponent>();
+
+    camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
+    camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
+
+    camera.x = camera.x < 0 ? 0 : camera.x;
+    camera.y = camera.y < 0 ? 0 : camera.y;
+    camera.x = camera.x > camera.w ? camera.w : camera.x;
+    camera.y = camera.y > camera.h ? camera.h : camera.y;
 }
 
 void Game::Destroy() {

@@ -2,12 +2,10 @@
 #include "./Constants.h"
 #include "./Game.h"
 
-using namespace std;
-
 int main(int argc, char *args[]) {
     #ifdef DEBUG
-        cout << ">>>SPARKLE<<<" << endl;
-        cout << "START" << endl;
+        std::cout << ">>>SPARKLE<<<" << std::endl;
+        std::cout << "START" << std::endl;
         unsigned int gameLoopCount = 0;
     #endif
 
@@ -21,15 +19,16 @@ int main(int argc, char *args[]) {
         game.Render();
         #ifdef DEBUG
             gameLoopCount++;
-                cout << endl;
-                cout << "MAIN_CPP-INITIALIZE-MAIN_LOOP-------------->>> i = " << gameLoopCount << " <<<" << endl;
+                std::cout << std::endl;
+                std::cout << "MAIN_CPP-INITIALIZE-MAIN_LOOP-------------->>> i = " << gameLoopCount << " <<<" << std::endl;
         #endif
     }
 
     game.Destroy();
 
     #ifdef DEBUG
-        cout << "END" << endl;
+        std::cout << "END" << std::endl;
     #endif
+    
     return 0;
 }
