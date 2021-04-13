@@ -57,16 +57,16 @@ void Game::LoadLevel(int levelNumber) {
     assetManager->AddTexture("wildhammer-image", std::string("./assets/images/wildhammer.png").c_str());
     assetManager->AddTexture("fields-tiletexture", std::string("./assets/tilemaps/fields.png").c_str());
 
-    map = new Map("fields-tiletexture", 1, 32);
+    map = new Map("fields-tiletexture", 2, 32);
     map->LoadMap("./assets/tilemaps/fields.map", 25, 20);
 
     //Adding entities with components
-    Entity& wildhammerEntity(manager.AddEntity("wildhammer-image"));
+    Entity& wildhammerEntity(manager.AddEntity("wildhammer-image", PLAYER_LAYER));
     wildhammerEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
     wildhammerEntity.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
     wildhammerEntity.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
 
-    Entity& catapultEntity(manager.AddEntity("catapult"));
+    Entity& catapultEntity(manager.AddEntity("catapult", ENEMY_LAYER));
     catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
     catapultEntity.AddComponent<SpriteComponent>("catapult-image");
 
