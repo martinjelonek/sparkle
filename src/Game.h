@@ -29,6 +29,7 @@ class Game {
         void Update();
         void Render();
         void HandleCameraMovement();
+        void CheckCollisions();
         void Destroy();
 };
 

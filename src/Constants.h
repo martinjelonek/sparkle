@@ -24,4 +24,9 @@ const unsigned int NUM_LAYERS = 6;
 //PLAYER
 const int PLAYER_SPEED = 100;
 
+#ifdef DEBUG
+    //SETTINGS (DEBUG ONLY)
+    const bool SHOW_COLLIDER_BOX = true;
+#endif
+
 #endif
