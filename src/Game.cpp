@@ -14,6 +14,7 @@ EntityManager manager;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
+SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 Map* map;
 
 Game::Game() {
@@ -51,6 +52,8 @@ void Game::Initialize(int width, int height) {
     return;
 }
 
+Entity& player(manager.AddEntity("wildhammer-image", PLAYER_LAYER));
+
 void Game::LoadLevel(int levelNumber) {
     //Adding new assets to the assetmanager list (map)
     assetManager->AddTexture("catapult-image", std::string("./assets/images/catapult-big-right.png").c_str());
@@ -61,10 +64,9 @@ void Game::LoadLevel(int levelNumber) {
     map->LoadMap("./assets/tilemaps/fields.map", 25, 20);
 
     //Adding entities with components
-    Entity& wildhammerEntity(manager.AddEntity("wildhammer-image", PLAYER_LAYER));
-    wildhammerEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
-    wildhammerEntity.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
-    wildhammerEntity.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
+    player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
+    player.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
+    player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
 
     Entity& catapultEntity(manager.AddEntity("catapult", ENEMY_LAYER));
     catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
@@ -107,6 +109,8 @@ void Game::Update() {
     ticksLastFrame = SDL_GetTicks();
 
     manager.Update(deltaTime);
+
+    HandleCameraMovement();
 }
 
 void Game::Render() {
@@ -117,6 +121,18 @@ void Game::Render() {
     manager.Render();
 
     SDL_RenderPresent(renderer);
+}
+
+void Game::HandleCameraMovement () {
+    TransformComponent* mainPlayerTransform = player.GetComponent<TransformComponent>();
+
+    camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
+    camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
+
+    camera.x = camera.x < 0 ? 0 : camera.x;
+    camera.y = camera.y < 0 ? 0 : camera.y;
+    camera.x = camera.x > camera.w ? camera.w : camera.x;
+    camera.y = camera.y > camera.h ? camera.h : camera.y;
 }
 
 void Game::Destroy() {

@@ -1,13 +1,15 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+//WINDOW
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 600;
 
-//Timestep constants (delta time)
+//TIMESTEP - DELTA TIME
 const unsigned int FPS = 60;
 const unsigned int FRAME_TARGET_TIME = 1000 / FPS;
 
+//LAYERS
 enum LayerType {
     TILEMAP_LAYER = 0,
     VEGETATION_LAYER = 1,
@@ -18,5 +20,8 @@ enum LayerType {
 };
 
 const unsigned int NUM_LAYERS = 6;
+
+//PLAYER
+const int PLAYER_SPEED = 100;
 
 #endif

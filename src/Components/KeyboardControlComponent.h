@@ -52,27 +52,27 @@ class KeyboardControlComponent: public Component {
                         transform->velocity.y = 0;
                         transform->velocity.x = 0;
                     } else {
-                        transform->velocity.y = -25;
+                        transform->velocity.y = -PLAYER_SPEED;
                         transform->velocity.x = 0;
                     }
                     sprite->Play("UpAnimation");
                 }
                 if(keyCode.compare(rightKey) == 0) {
-                    if (transform->position.x + transform->width >= WINDOW_WIDTH) {
+                    if (transform->position.x + transform->width >= WINDOW_WIDTH * 2) {
                         transform->velocity.y = 0;
                         transform->velocity.x = 0;
                     } else {
                         transform->velocity.y = 0;
-                        transform->velocity.x = 25;
+                        transform->velocity.x = PLAYER_SPEED;
                     }
                     sprite->Play("RightAnimation");
                 }
                 if(keyCode.compare(downKey) == 0) {
-                    if (transform->position.y + transform->height >= WINDOW_HEIGHT) {
+                    if (transform->position.y + transform->height >= WINDOW_HEIGHT * 2) {
                         transform->velocity.y = 0;
                         transform->velocity.x = 0;
                     } else {
-                        transform->velocity.y = 25;
+                        transform->velocity.y = PLAYER_SPEED;
                         transform->velocity.x = 0;
                     }
                     sprite->Play("DownAnimation");
@@ -83,7 +83,7 @@ class KeyboardControlComponent: public Component {
                         transform->velocity.x = 0;
                     } else {
                         transform->velocity.y = 0;
-                        transform->velocity.x = -25;
+                        transform->velocity.x = -PLAYER_SPEED;
                     }
                     sprite->Play("LeftAnimation");
                 }
