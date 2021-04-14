@@ -51,19 +51,23 @@ Entity& EntityManager::AddEntity(std::string entityName, LayerType layer) {
     return *entity;
 }
 
-std::string EntityManager::CheckEntityCollisions(Entity& myEntity) const {
-    ColliderComponent* myCollider = myEntity.GetComponent<ColliderComponent>();
-    for (auto& entity: entities) {
-        if (entity->name.compare(myEntity.name) != 0 && entity->name.compare("Tile") != 0) {
-            if (entity->HasComponent<ColliderComponent>()) {
-                ColliderComponent* otherCollider = entity->GetComponent<ColliderComponent>();
-                if(Collision::CheckRecktangleCollision(myCollider->collider, otherCollider->collider)) {
-                    return otherCollider->colliderTag;
+void EntityManager::CheckCollisions (bool& gameIsRunning) {
+    for (int i = 0; i < entities.size() - 1; i++) {
+        auto& EntityA = entities[i];
+        if (EntityA->HasComponent<ColliderComponent>()) {
+            ColliderComponent* ColliderA = EntityA->GetComponent<ColliderComponent>();
+            for (int j = i + 1; j < entities.size(); j++) {
+                auto& EntityB = entities[j];
+                if (EntityA->name.compare(EntityB->name) != 0 && EntityB->HasComponent<ColliderComponent>()) {
+                    ColliderComponent* ColliderB = EntityB->GetComponent<ColliderComponent>();
+                    if (Collision::CheckRectangleCollision(ColliderA->collider, ColliderB->collider)) {
+                        ColliderA->CollisionTriger(ColliderB->colliderTag, gameIsRunning);
+                        ColliderB->CollisionTriger(ColliderA->colliderTag, gameIsRunning);
+                    }
                 }
             }
         }
     }
-    return std::string();
 }
 
 #ifdef DEBUG

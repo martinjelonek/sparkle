@@ -36,6 +36,13 @@ class ColliderComponent: public Component {
             destinationRectangle.y = collider.y - Game::camera.y;
         }
 
+        void CollisionTriger (std::string& otherColliderTag, bool& gameIsRunning) {
+            if (colliderTag.compare("player"))
+            {
+                if (otherColliderTag.compare("enemy")) CollisonWithEnemy(gameIsRunning);
+            }
+        }
+
         #ifdef DEBUG
             void Render() override {
                 #include "../Constants.h"
@@ -45,6 +52,16 @@ class ColliderComponent: public Component {
                 }
             }
         #endif
+
+        private:
+
+        void CollisonWithEnemy(bool& gameIsRunning) {
+                #ifdef DEBUG
+                    #include <iostream>
+                    std::cout << "......COLIDER_COMPONENT_H-PLAYER_COLLISON_TRIGER" << std::endl;
+                #endif
+                gameIsRunning = false;
+        }
 };
 
 #endif
