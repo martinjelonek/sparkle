@@ -11,10 +11,10 @@
 class AssetManager;
 
 class Game {
-    private:
-        bool isRunning;        
+    private:      
         SDL_Window *window;
     public:
+        bool isRunning;  
         Game();
         ~Game();
         int ticksLastFrame = 0;
@@ -29,6 +29,7 @@ class Game {
         void Update();
         void Render();
         void HandleCameraMovement();
+        void CheckCollisions();
         void Destroy();
 };
 

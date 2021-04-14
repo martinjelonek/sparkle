@@ -5,6 +5,7 @@
 #include "./Components/TransformComponent.h"
 #include "./Components/SpriteComponent.h"
 #include "./Components/KeyboardControlComponent.h"
+#include "./Components/ColliderComponent.h"
 #include "../lib/glm/glm.hpp"
 #include <iostream>
 
@@ -67,10 +68,12 @@ void Game::LoadLevel(int levelNumber) {
     player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
     player.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
     player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
+    player.AddComponent<ColliderComponent>("player", 240, 106, 32, 32);
 
     Entity& catapultEntity(manager.AddEntity("catapult", ENEMY_LAYER));
     catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
     catapultEntity.AddComponent<SpriteComponent>("catapult-image");
+    catapultEntity.AddComponent<ColliderComponent>("enemy", 0, 0, 32, 32);
 
     #ifdef DEBUG
         std::cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << std::endl;
@@ -102,15 +105,17 @@ void Game::Update() {
     //delta time - difference in ticks from last frame in ms
     float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f;
 
-    //Clamp deltaTime to the max value
+    //clamp deltaTime to the max value
     deltaTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
     
     //set current ticks for the next update
     ticksLastFrame = SDL_GetTicks();
 
+    //update
     manager.Update(deltaTime);
 
     HandleCameraMovement();
+    CheckCollisions();
 }
 
 void Game::Render() {
@@ -133,6 +138,10 @@ void Game::HandleCameraMovement () {
     camera.y = camera.y < 0 ? 0 : camera.y;
     camera.x = camera.x > camera.w ? camera.w : camera.x;
     camera.y = camera.y > camera.h ? camera.h : camera.y;
+}
+
+void Game::CheckCollisions () {
+    manager.CheckCollisions(this->isRunning);
 }
 
 void Game::Destroy() {

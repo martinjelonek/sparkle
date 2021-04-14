@@ -1,4 +1,6 @@
 #include "./EntityManager.h"
+#include "./Collision.h"
+#include "./Components/ColliderComponent.h"
 #include <iostream>
 
 void EntityManager::ClearData() {
@@ -47,6 +49,25 @@ Entity& EntityManager::AddEntity(std::string entityName, LayerType layer) {
     Entity *entity = new Entity(*this, entityName, layer);
     entities.emplace_back(entity);
     return *entity;
+}
+
+void EntityManager::CheckCollisions (bool& gameIsRunning) {
+    for (int i = 0; i < entities.size() - 1; i++) {
+        auto& EntityA = entities[i];
+        if (EntityA->HasComponent<ColliderComponent>()) {
+            ColliderComponent* ColliderA = EntityA->GetComponent<ColliderComponent>();
+            for (int j = i + 1; j < entities.size(); j++) {
+                auto& EntityB = entities[j];
+                if (EntityA->name.compare(EntityB->name) != 0 && EntityB->HasComponent<ColliderComponent>()) {
+                    ColliderComponent* ColliderB = EntityB->GetComponent<ColliderComponent>();
+                    if (Collision::CheckRectangleCollision(ColliderA->collider, ColliderB->collider)) {
+                        ColliderA->CollisionTriger(ColliderB->colliderTag, gameIsRunning);
+                        ColliderB->CollisionTriger(ColliderA->colliderTag, gameIsRunning);
+                    }
+                }
+            }
+        }
+    }
 }
 
 #ifdef DEBUG

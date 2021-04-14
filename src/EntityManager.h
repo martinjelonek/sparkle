@@ -2,6 +2,7 @@
 #define ENTITYMANAGER_H
 
 #include "./Entity.h"
+#include "./Game.h"
 #include "./Component.h"
 #include "./Constants.h"
 #include <string>
@@ -19,7 +20,8 @@ class EntityManager {
         void ListAllEntities() const;       
         std::vector<Entity*> GetEntities() const;
         std::vector<Entity*> GetEntitiesByLayer(LayerType layer) const;
-        Entity& AddEntity(std::string entityName, LayerType layer);       
+        Entity& AddEntity(std::string entityName, LayerType layer);
+        void CheckCollisions(bool& gameIsRunning);
 };
 
 #endif
