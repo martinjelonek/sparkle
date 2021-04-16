@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <SDL2/SDL.h>
+
 //WINDOW
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 600;
@@ -19,6 +21,10 @@ enum CollisionType {
     PLAYER_LEVEL_COMPLETE_COLLISION
 };
 */
+
+//COLORS
+const SDL_Color WHITE_COLOR = {255, 255, 255, 255};
+const SDL_Color GREEN_COLOR = {0, 255, 0, 255};
 
 //LAYERS
 enum LayerType {
