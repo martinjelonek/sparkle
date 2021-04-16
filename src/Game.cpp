@@ -6,6 +6,7 @@
 #include "./Components/SpriteComponent.h"
 #include "./Components/KeyboardControlComponent.h"
 #include "./Components/ColliderComponent.h"
+#include "./Components/TextLabelComponent.h"
 #include "../lib/glm/glm.hpp"
 #include <iostream>
 
@@ -36,6 +37,11 @@ void Game::Initialize(int width, int height) {
         return;
     }
     
+    if (TTF_Init() != 0) {
+        std::cerr << "Error initializing SDL_TTF" << std::endl;
+        return;
+    }
+
     //create SDL window
     window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);    
     if(!window) {
@@ -60,6 +66,7 @@ void Game::LoadLevel(int levelNumber) {
     assetManager->AddTexture("catapult-image", std::string("./assets/images/catapult-big-right.png").c_str());
     assetManager->AddTexture("wildhammer-image", std::string("./assets/images/wildhammer.png").c_str());
     assetManager->AddTexture("fields-tiletexture", std::string("./assets/tilemaps/fields.png").c_str());
+    assetManager->AddFont("pixeldown-font", std::string("./assets/fonts/pixeldown.ttf").c_str(), 14);
 
     map = new Map("fields-tiletexture", 2, 32);
     map->LoadMap("./assets/tilemaps/fields.map", 25, 20);
@@ -74,6 +81,9 @@ void Game::LoadLevel(int levelNumber) {
     catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
     catapultEntity.AddComponent<SpriteComponent>("catapult-image");
     catapultEntity.AddComponent<ColliderComponent>("enemy", 0, 0, 32, 32);
+
+    Entity& labelGameTitle(manager.AddEntity("LabelGameTitle", UI_LAYER));
+    labelGameTitle.AddComponent<TextLabelComponent>(10, 10, "wildhammer", "pixeldown-font", WHITE_COLOR);
 
     #ifdef DEBUG
         std::cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << std::endl;
