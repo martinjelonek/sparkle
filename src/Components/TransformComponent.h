@@ -36,6 +36,29 @@ class TransformComponent: public Component {
             position.x += velocity.x * deltaTime;
             position.y += velocity.y * deltaTime;
         }
+
+         #ifdef DEBUG
+            void Render() override {
+                #include "../Constants.h"
+                if (SHOW_TRANSFORM_BOX) {    
+                    SDL_SetRenderDrawColor(Game::renderer, 0, 0, 255, 255);
+                    SDL_RenderDrawLine (
+                        Game::renderer, 
+                        position.x - Game::camera.x, 
+                        position.y - Game::camera.y, 
+                        position.x + velocity.x - Game::camera.x, 
+                        position.y + velocity.y - Game::camera.y
+                    );
+                    SDL_Rect vecEnd = {
+                        position.x + velocity.x - 5 - Game::camera.x, 
+                        position.y + velocity.y + 5 - Game::camera.y,
+                        10, 
+                        -10
+                    };
+                    SDL_RenderDrawRect(Game::renderer, &vecEnd);
+                }
+            }
+        #endif
 };
 
 #endif

@@ -11,6 +11,7 @@
 class EntityManager {
     private:
         std::vector<Entity*> entities;
+        void DestroyInactiveEntities();
     public:
         void ClearData();
         void Update(float deltaTime);

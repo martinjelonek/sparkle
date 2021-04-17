@@ -7,6 +7,7 @@
 #include "./Components/KeyboardControlComponent.h"
 #include "./Components/ColliderComponent.h"
 #include "./Components/TextLabelComponent.h"
+#include "./Components/ProjectileEmitterComponent.h"
 #include "../lib/glm/glm.hpp"
 #include <iostream>
 
@@ -66,24 +67,31 @@ void Game::LoadLevel(int levelNumber) {
     assetManager->AddTexture("catapult-image", std::string("./assets/images/catapult-big-right.png").c_str());
     assetManager->AddTexture("wildhammer-image", std::string("./assets/images/wildhammer.png").c_str());
     assetManager->AddTexture("fields-tiletexture", std::string("./assets/tilemaps/fields.png").c_str());
+    assetManager->AddTexture("enemy-projectile", std::string("./assets/images/enemy-projectile.png").c_str());
     assetManager->AddFont("pixeldown-font", std::string("./assets/fonts/pixeldown.ttf").c_str(), 14);
 
     map = new Map("fields-tiletexture", 2, 32);
     map->LoadMap("./assets/tilemaps/fields.map", 25, 20);
 
     //Adding entities with components
-    player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
+    player.AddComponent<TransformComponent>(150, 10, 0, 0, 32, 32, 1);
     player.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
     player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
-    player.AddComponent<ColliderComponent>("player", 240, 106, 32, 32);
+    player.AddComponent<ColliderComponent>("player", 150, 10, 32, 32);
 
     Entity& catapultEntity(manager.AddEntity("catapult", ENEMY_LAYER));
-    catapultEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+    catapultEntity.AddComponent<TransformComponent>(150, 495, 20, -5, 32, 32, 1);
     catapultEntity.AddComponent<SpriteComponent>("catapult-image");
-    catapultEntity.AddComponent<ColliderComponent>("enemy", 0, 0, 32, 32);
+    catapultEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32);
+
+    Entity& projectile(manager.AddEntity("projectile", PROJECTILE_LAYER));
+    projectile.AddComponent<TransformComponent>(150+16, 495+16, 0, 0, 4, 4, 1);
+    projectile.AddComponent<SpriteComponent>("enemy-projectile");
+    projectile.AddComponent<ColliderComponent>("projectile", 150+16, 495+16, 4, 4);
+    projectile.AddComponent<ProjectileEmitterComponent>(50, 270, 200, true);
 
     Entity& labelGameTitle(manager.AddEntity("LabelGameTitle", UI_LAYER));
-    labelGameTitle.AddComponent<TextLabelComponent>(10, 10, "wildhammer", "pixeldown-font", WHITE_COLOR);
+    labelGameTitle.AddComponent<TextLabelComponent>(10, 10, "Wildhammer", "pixeldown-font", WHITE_COLOR);
 
     #ifdef DEBUG
         std::cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << std::endl;
@@ -123,7 +131,6 @@ void Game::Update() {
 
     //update
     manager.Update(deltaTime);
-
     HandleCameraMovement();
     CheckCollisions();
 }
@@ -151,7 +158,7 @@ void Game::HandleCameraMovement () {
 }
 
 void Game::CheckCollisions () {
-    manager.CheckCollisions(this->isRunning);
+    manager.CheckCollisions(isRunning);
 }
 
 void Game::Destroy() {
