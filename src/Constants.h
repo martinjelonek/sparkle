@@ -43,6 +43,7 @@ const int PLAYER_SPEED = 100;
 //SETTINGS (DEBUG ONLY)
 #ifdef DEBUG
     const bool SHOW_COLLIDER_BOX = true;
+    const bool SHOW_TRANSFORM_BOX = true;
     const bool SHOW_TEXTURE_RENDER_INFO = false; // TextureManager.cpp
 #endif
 

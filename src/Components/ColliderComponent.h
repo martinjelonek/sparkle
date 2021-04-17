@@ -33,13 +33,20 @@ class ColliderComponent: public Component {
             collider.w = transform->width * transform->scale;
             collider.h = transform->height * transform->scale;
             destinationRectangle.x = collider.x - Game::camera.x;
-            destinationRectangle.y = collider.y - Game::camera.y;
+            destinationRectangle.y = collider.y - Game::camera.y;                
         }
 
         void CollisionTriger (std::string& otherColliderTag, bool& gameIsRunning) {
-            if (colliderTag.compare("player"))
-            {
-                if (otherColliderTag.compare("enemy")) CollisonWithEnemy(gameIsRunning);
+            //PLAYER - ENEMY COLLISION
+            if (colliderTag.compare("player") == 0) {
+                if (otherColliderTag.compare("enemy") == 0) PlayerEnemyCollision(gameIsRunning);
+            } else if (colliderTag.compare("enemy") == 0) {
+                if (otherColliderTag.compare("player") == 0) PlayerEnemyCollision(gameIsRunning);
+            //PLAYER - PROJECTILE COLLISION
+            } else if (colliderTag.compare("player") == 0) { 
+                if (otherColliderTag.compare("projectile") == 0) PlayerProjectileCollision(gameIsRunning);
+            } else if (colliderTag.compare("projectile") == 0) { 
+                if (otherColliderTag.compare("player") == 0) PlayerProjectileCollision(gameIsRunning);
             }
         }
 
@@ -48,20 +55,29 @@ class ColliderComponent: public Component {
                 #include "../Constants.h"
                 if (SHOW_COLLIDER_BOX) {    
                     SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, 255);
-                    SDL_RenderDrawRect(Game::renderer, &collider);                    
+                    SDL_RenderDrawRect(Game::renderer, &destinationRectangle);                    
                 }
             }
         #endif
 
         private:
 
-        void CollisonWithEnemy(bool& gameIsRunning) {
+        void PlayerEnemyCollision(bool& gameIsRunning) {
                 #ifdef DEBUG
                     #include <iostream>
-                    std::cout << "......COLIDER_COMPONENT_H-PLAYER_COLLISON_TRIGER" << std::endl;
+                    std::cout << "......COLIDER_COMPONENT_H-COLLISON_TRIGER-PLAYER-ENEMY-COLLISION" << std::endl;
                 #endif
                 gameIsRunning = false;
         }
+
+        void PlayerProjectileCollision(bool& gameIsRunning) {
+            #ifdef DEBUG
+                    #include <iostream>
+                    std::cout << "......COLIDER_COMPONENT_H-COLLISON_TRIGER-PLAYER-PROJECTILE-COLLISION" << std::endl;
+            #endif
+            gameIsRunning = false;
+        }
+
 };
 
 #endif

@@ -14,9 +14,9 @@ class Game {
     private:      
         SDL_Window *window;
     public:
-        bool isRunning;  
         Game();
         ~Game();
+        bool isRunning;  
         int ticksLastFrame = 0;
         bool IsRunning() const;        
         static SDL_Renderer *renderer;
