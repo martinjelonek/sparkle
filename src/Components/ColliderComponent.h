@@ -36,20 +36,6 @@ class ColliderComponent: public Component {
             destinationRectangle.y = collider.y - Game::camera.y;                
         }
 
-        void CollisionTriger (std::string& otherColliderTag, bool& gameIsRunning) {
-            //PLAYER - ENEMY COLLISION
-            if (colliderTag.compare("player") == 0) {
-                if (otherColliderTag.compare("enemy") == 0) PlayerEnemyCollision(gameIsRunning);
-            } else if (colliderTag.compare("enemy") == 0) {
-                if (otherColliderTag.compare("player") == 0) PlayerEnemyCollision(gameIsRunning);
-            //PLAYER - PROJECTILE COLLISION
-            } else if (colliderTag.compare("player") == 0) { 
-                if (otherColliderTag.compare("projectile") == 0) PlayerProjectileCollision(gameIsRunning);
-            } else if (colliderTag.compare("projectile") == 0) { 
-                if (otherColliderTag.compare("player") == 0) PlayerProjectileCollision(gameIsRunning);
-            }
-        }
-
         #ifdef DEBUG
             void Render() override {
                 #include "../Constants.h"

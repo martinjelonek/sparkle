@@ -58,7 +58,7 @@ Entity& EntityManager::AddEntity(std::string entityName, LayerType layer) {
     return *entity;
 }
 
-void EntityManager::CheckCollisions (bool& gameIsRunning) {
+void EntityManager::CollisionTrigger (EventManager& EventManager) {
     for (int i = 0; i < entities.size() - 1; i++) {
         auto& EntityA = entities[i];
         if (EntityA->HasComponent<ColliderComponent>()) {
@@ -68,8 +68,7 @@ void EntityManager::CheckCollisions (bool& gameIsRunning) {
                 if (EntityA->name.compare(EntityB->name) != 0 && EntityB->HasComponent<ColliderComponent>()) {
                     ColliderComponent* ColliderB = EntityB->GetComponent<ColliderComponent>();
                     if (Collision::CheckRectangleCollision(ColliderA->collider, ColliderB->collider)) {
-                        ColliderA->CollisionTriger(ColliderB->colliderTag, gameIsRunning);
-                        ColliderB->CollisionTriger(ColliderA->colliderTag, gameIsRunning);
+                        
                     }
                 }
             }

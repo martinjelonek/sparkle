@@ -1,6 +1,7 @@
 #include "./Game.h"
 #include "./Constants.h"
 #include "./AssetManager.h"
+#include "./EventManager.h"
 #include "./Map.h"
 #include "./Components/TransformComponent.h"
 #include "./Components/SpriteComponent.h"
@@ -14,10 +15,12 @@
 using namespace glm;
 
 EntityManager manager;
+EventManager eventManager;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
 SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+Entity* player = NULL;
 Map* map;
 
 Game::Game() {
@@ -54,48 +57,71 @@ void Game::Initialize(int width, int height) {
         std::cerr << "Error creating SDL renderer." << std::endl;
     }
 
-    LoadLevel(0);
+    LoadLevel(1);
 
     isRunning = true;
     return;
 }
 
-Entity& player(manager.AddEntity("wildhammer-image", PLAYER_LAYER));
-
 void Game::LoadLevel(int levelNumber) {
-    //Adding new assets to the assetmanager list (map)
-    assetManager->AddTexture("catapult-image", std::string("./assets/images/catapult-big-right.png").c_str());
-    assetManager->AddTexture("wildhammer-image", std::string("./assets/images/wildhammer.png").c_str());
-    assetManager->AddTexture("fields-tiletexture", std::string("./assets/tilemaps/fields.png").c_str());
-    assetManager->AddTexture("enemy-projectile", std::string("./assets/images/enemy-projectile.png").c_str());
-    assetManager->AddFont("pixeldown-font", std::string("./assets/fonts/pixeldown.ttf").c_str(), 14);
+    //Lua preparation
+    sol::state lua;
+    lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
 
-    map = new Map("fields-tiletexture", 2, 32);
-    map->LoadMap("./assets/tilemaps/fields.map", 25, 20);
+    std::string levelName = "Level" + std::to_string(levelNumber);
+    lua.script_file("./assets/scripts/" + levelName + ".lua");
 
-    //Adding entities with components
-    player.AddComponent<TransformComponent>(150, 10, 0, 0, 32, 32, 1);
-    player.AddComponent<SpriteComponent>("wildhammer-image", 2, 360, true, false);
-    player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
-    player.AddComponent<ColliderComponent>("player", 150, 10, 32, 32);
+    sol::table levelData = lua[levelName];
+    
+    /****************************************************/
+    /* LOADING ASSETS FORM LUA CONFIG FILE              */
+    /****************************************************/
 
-    Entity& catapultEntity(manager.AddEntity("catapult", ENEMY_LAYER));
-    catapultEntity.AddComponent<TransformComponent>(150, 495, 20, -5, 32, 32, 1);
-    catapultEntity.AddComponent<SpriteComponent>("catapult-image");
-    catapultEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32);
+    sol::table levelAssets = levelData["assets"];   
+    unsigned int assetsIndex = 0;
+    while(true) {
+        sol::optional<sol::table> existsAssetIndexNode = levelAssets[assetsIndex];
+        if (existsAssetIndexNode == sol::nullopt) {
+            break;
+        } else {
+            sol::table asset = levelAssets[assetsIndex];
+            std::string assetType = asset["type"];
+            if (assetType.compare("texture") == 0) {
+                std::string assetId = asset["id"];
+                std::string assetFile = asset["file"];
+                assetManager->AddTexture(assetId, assetFile.c_str());
+            } //else if (assetType.compare("font") == 0) {
+                //std::string assetId = asset["id"];
+                //std::string assetFile = asset["file"];
+                //std::string assetFontSize = asset["fontSize"];
+                //assetManager->AddFont(assetId, assetFile.c_str(), assetFontSize);
+            //}
+            assetsIndex++;
+        }
+    }
 
-    Entity& projectile(manager.AddEntity("projectile", PROJECTILE_LAYER));
-    projectile.AddComponent<TransformComponent>(150+16, 495+16, 0, 0, 4, 4, 1);
-    projectile.AddComponent<SpriteComponent>("enemy-projectile");
-    projectile.AddComponent<ColliderComponent>("projectile", 150+16, 495+16, 4, 4);
-    projectile.AddComponent<ProjectileEmitterComponent>(50, 270, 200, true);
+    /****************************************************/
+    /* LOADING MAPS FORM LUA CONFIG FILE                */
+    /****************************************************/
 
-    Entity& labelGameTitle(manager.AddEntity("LabelGameTitle", UI_LAYER));
-    labelGameTitle.AddComponent<TextLabelComponent>(10, 10, "Wildhammer", "pixeldown-font", WHITE_COLOR);
+    sol::table levelMap = levelData["map"];
+    std::string mapTextureId = levelMap["textureAssetId"];
+    std::string mapFile = levelMap["file"];
+
+    map = new Map{
+        mapTextureId,
+        static_cast<int>(levelMap["scale"]),
+        static_cast<int>(levelMap["tileSize"])
+    };
+
+    map->LoadMap (
+        mapFile, 
+        static_cast<int>(levelMap["mapSizeX"]),
+        static_cast<int>(levelMap["mapSizeY"])
+    );
 
     #ifdef DEBUG
-        std::cout << "Game::LoadLevel: " << levelNumber << " complete. Result:" << std::endl;
-        manager.ListAllEntities();
+        std::cout << "GAME.CPP-LOADLEVEL: " << levelNumber << std::endl;
     #endif
 }
 
@@ -146,7 +172,8 @@ void Game::Render() {
 }
 
 void Game::HandleCameraMovement () {
-    TransformComponent* mainPlayerTransform = player.GetComponent<TransformComponent>();
+    if(player) {
+    TransformComponent* mainPlayerTransform = player->GetComponent<TransformComponent>();
 
     camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
     camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
@@ -155,10 +182,12 @@ void Game::HandleCameraMovement () {
     camera.y = camera.y < 0 ? 0 : camera.y;
     camera.x = camera.x > camera.w ? camera.w : camera.x;
     camera.y = camera.y > camera.h ? camera.h : camera.y;
+
+    }
 }
 
 void Game::CheckCollisions () {
-    manager.CheckCollisions(isRunning);
+    if(!manager.HasNoEntities()) manager.CollisionTrigger(eventManager);
 }
 
 void Game::Destroy() {
