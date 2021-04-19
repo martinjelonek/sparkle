@@ -1,4 +1,5 @@
 #include "./EntityManager.h"
+#include "./Event.h"
 #include "./Collision.h"
 #include "./Components/ColliderComponent.h"
 #include <iostream>
@@ -68,7 +69,7 @@ void EntityManager::CollisionTrigger (EventManager& EventManager) {
                 if (EntityA->name.compare(EntityB->name) != 0 && EntityB->HasComponent<ColliderComponent>()) {
                     ColliderComponent* ColliderB = EntityB->GetComponent<ColliderComponent>();
                     if (Collision::CheckRectangleCollision(ColliderA->collider, ColliderB->collider)) {
-                        
+                        EventManager.AddCollisionEvent(COLLISION, ColliderA->colliderTag, ColliderB->colliderTag);
                     }
                 }
             }

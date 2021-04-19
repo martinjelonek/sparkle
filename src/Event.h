@@ -3,15 +3,14 @@
 
 #include <string>
 #include "./Constants.h"
-#include "./Entity.h"
 
 class Event {
     private:
         EventType eventType;
-        Entity* pEntityA;
-        Entity* pEntityB;
     public:
-        Event(EventType eventType, Entity& entityA, Entity& entityB);
+        std::string colliderTagA;
+        std::string colliderTagB;
+        Event(EventType eventType, std::string colliderTagA, std::string colliderTagB);
         ~Event();
         EventType GetEventType() const;
 };

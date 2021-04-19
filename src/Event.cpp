@@ -1,9 +1,9 @@
 #include "./Event.h"
 
-Event::Event(EventType eventType, Entity& entityA, Entity& entityB) {
+Event::Event(EventType eventType, std::string colliderTagA, std::string colliderTagB) {
     this->eventType = eventType;
-    this->pEntityA = &entityA;
-    this->pEntityB = &entityB;
+    this->colliderTagA = colliderTagA;
+    this->colliderTagB = colliderTagB;
 }
 
 Event::~Event() {

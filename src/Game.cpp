@@ -159,6 +159,7 @@ void Game::Update() {
     manager.Update(deltaTime);
     HandleCameraMovement();
     CheckCollisions();
+    if (eventManager.gameStop) isRunning = false;
 }
 
 void Game::Render() {
@@ -191,6 +192,7 @@ void Game::CheckCollisions () {
 }
 
 void Game::Destroy() {
+    eventManager.DestroyAllEvents();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
