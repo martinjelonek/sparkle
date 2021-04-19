@@ -10,9 +10,9 @@ Level1 = {
         textureAssetId = "terrain-fields",
         file = "./assets/tilemaps/fields.map",
         scale = 2,
-        tilesize = 32,
-        mapsizeX = 25,
-        mapsizeY = 20
+        tileSize = 32,
+        mapSizeX = 25,
+        mapSizeY = 20
     },
     entities = {
         [0] = {

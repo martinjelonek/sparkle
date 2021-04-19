@@ -90,6 +90,9 @@ void Game::LoadLevel(int levelNumber) {
                 std::string assetId = asset["id"];
                 std::string assetFile = asset["file"];
                 assetManager->AddTexture(assetId, assetFile.c_str());
+                #ifdef DEBUG
+                    std::cout << "SOL ADDED ASSET: assetType = " << assetType << ", assetId = " << assetId << ", assetFile = " << assetFile << std::endl;
+                #endif
             } //else if (assetType.compare("font") == 0) {
                 //std::string assetId = asset["id"];
                 //std::string assetFile = asset["file"];
@@ -121,6 +124,16 @@ void Game::LoadLevel(int levelNumber) {
     );
 
     #ifdef DEBUG
+        std::string text = "";
+        std::cout << "SOL ADDED MAP: mapTextureId = " << mapTextureId << ", mapFile = " << mapFile;
+        text = levelMap["scale"];
+        std::cout << ", scale = " << text;
+        text = levelMap["tileSize"];
+        std::cout << ", tileSize = " << text;
+        text = levelMap["mapSizeX"];
+        std::cout << ", mapSizeX = " << text;
+        text = levelMap["mapSizeY"];
+        std::cout << ", mapSizeY = " << text << std::endl;
         std::cout << "GAME.CPP-LOADLEVEL: " << levelNumber << std::endl;
     #endif
 }
