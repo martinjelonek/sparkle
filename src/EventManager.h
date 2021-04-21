@@ -13,7 +13,6 @@ class EventManager {
         std::vector<Event*> events;
         void CollisionEventCheck(Event& event);
         bool CollisionResolve(std::string tagA, std::string tagB);
-        void HandleCollisionEvent();
     public:
         bool gameStop = false;
         EventManager();
