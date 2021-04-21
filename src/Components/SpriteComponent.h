@@ -24,10 +24,13 @@ class SpriteComponent: public Component {
     public:
         SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
-        SpriteComponent(const char* filePath) {
-            isAnimated = false;
+        SpriteComponent(std::string id, bool isAnimated) {
+            isAnimated = isAnimated;
             isFixed = false;
-            SetTexture(filePath);
+            SetTexture(id);
+            #ifdef DEBUG
+                std::cout << "...............ADDED-SPRITECOMPONENT: " << "id = " << id << std::endl;
+            #endif
         }
 
         SpriteComponent(std::string id, unsigned int numFrames, unsigned int animationSpeed, bool hasDirections, bool isFixed) {
@@ -57,6 +60,12 @@ class SpriteComponent: public Component {
             Play(this->currentAnimationName);
 
             SetTexture(id);
+
+            #ifdef DEBUG
+                std::cout << "...............ADDED-SPRITECOMPONENT: " << "id = " << id << ", numFrames = " << numFrames
+                    << ", animationSpeed = " << animationSpeed << ", hasDirections = " << hasDirections
+                    << ", isFixed = " << isFixed << std::endl;
+            #endif
         }
 
         void Play(std::string animationName) {
@@ -79,22 +88,22 @@ class SpriteComponent: public Component {
         }
 
         void Update(float deltaTime) {
+            #ifdef DEBUG
+                std::cout << "......UPDATE-SPRITE-" << this->owner->name << std::endl;
+            #endif
             if (isAnimated) sourceRectangle.x = sourceRectangle.w * static_cast<int>((SDL_GetTicks() / animationSpeed) % numFrames);
             sourceRectangle.y = animationIndex * transform->height;
             destinationRectangle.x = static_cast<int>(transform->position.x) - (isFixed ? 0 : Game::camera.x);
             destinationRectangle.y = static_cast<int>(transform->position.y) - (isFixed ? 0 : Game::camera.y);
             destinationRectangle.w = transform->width * transform->scale;
             destinationRectangle.h = transform->height * transform->scale;
-            #ifdef DEBUG
-                std::cout << "...SPRITECOMPONENT_H-UPDATE: " << this->owner << std::endl;
-            #endif
         }
 
         void Render() override {
-            TextureManager::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
             #ifdef DEBUG
-                std::cout << "...SPRITECOMPONENT_H-RENDER: " << this->owner << std::endl; 
+                std::cout << "......RENDER-SPRITE-" << this->owner->name << std::endl; 
             #endif
+            TextureManager::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
         }
 };
 

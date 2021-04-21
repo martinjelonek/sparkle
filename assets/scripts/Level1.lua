@@ -24,6 +24,10 @@ Level1 = {
                         x = 240,
                         y = 106
                     },
+                    velocity = {
+                        x = 0,
+                        y = 0,
+                    },
                     width = 32,
                     height = 32,
                     scale = 1,
@@ -32,8 +36,9 @@ Level1 = {
                 sprite = {
                     textureAssetId = "wildhammer",
                     animated = true,
+                    hasDirection = true;
                     frameCount = 2,
-                    animationSpeed = 90,
+                    animationSpeed = 375,
                     fixed = false
                 },
                 collider = {
@@ -59,6 +64,10 @@ Level1 = {
                         x = 650,
                         y = 405
                     },
+                    velocity = {
+                        x = 20,
+                        y = 0,
+                    },
                     width = 32,
                     height = 32,
                     scale = 1,
@@ -66,16 +75,20 @@ Level1 = {
                 },
                 sprite = {
                     textureAssetId = "catapult",
-                    animated = false
+                    animated = false,
+                    fixed = false
                 },
                 collider = {
                     tag = "enemy"
                 },
                 projectileEmitter = {
                     textureAssetId = "enemy-projectile",
+                    width = 4,
+                    height = 4,
                     speed = 50,
                     range = 200,
-                    angle = 180
+                    angle = 30,
+                    loop = true
                 }
             }
         }

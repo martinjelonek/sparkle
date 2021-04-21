@@ -19,6 +19,15 @@ class ProjectileEmitterComponent: public Component {
             this->range = range;
             this->loop = loop;
             this->angleRad = glm::radians(static_cast<float>(angleDeg));
+            #ifdef DEBUG
+                #include <string>
+                std::cout << "...............ADDED-PROJECTILEEMITTERCOMPONENT: " 
+                << "speed = " << speed 
+                << ", angleDeg = " << angleDeg 
+                << ", range = " << range 
+                << ", loop = " << loop
+                << std::endl;
+            #endif
         }
 
         void Initialize() override {
@@ -28,6 +37,9 @@ class ProjectileEmitterComponent: public Component {
         }
 
         void Update(float deltaTime) override {
+            #ifdef DEBUG
+                std::cout << "......UPDATE-PROJECTILEEMITTER-" << this->owner->name << std::endl;
+            #endif
             if (glm::distance(transform->position, origin) > range) {
                 if(loop) {
                     transform->position.x = origin.x;

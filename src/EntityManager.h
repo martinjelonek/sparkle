@@ -22,6 +22,7 @@ class EntityManager {
         void ListAllEntities() const;       
         std::vector<Entity*> GetEntities() const;
         std::vector<Entity*> GetEntitiesByLayer(LayerType layer) const;
+        Entity* GetEntitiesByName(std::string entityName) const;
         Entity& AddEntity(std::string entityName, LayerType layer);
         void CollisionTrigger(EventManager& eventManager);
 };

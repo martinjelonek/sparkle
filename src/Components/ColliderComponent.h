@@ -17,6 +17,9 @@ class ColliderComponent: public Component {
         ColliderComponent(std::string colliderTag, int x, int y, int width, int height) {
             this->colliderTag = colliderTag;
             this->collider = {x, y, width, height};
+            #ifdef DEBUG
+                std::cout << "...............ADDED-COLLIDERCOMPONENT: " << "colliderTag = " << colliderTag << std::endl;
+            #endif
         }
 
         void Initialize() override {
@@ -28,6 +31,9 @@ class ColliderComponent: public Component {
         }
 
         void Update(float deltaTime) override {
+            #ifdef DEBUG
+                std::cout << "......UPDATE-COLLIDERCOMPONENT-" << this->owner->name << std::endl;
+            #endif
             collider.x = static_cast<int>(transform->position.x);
             collider.y = static_cast<int>(transform->position.y);
             collider.w = transform->width * transform->scale;

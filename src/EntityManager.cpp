@@ -53,9 +53,21 @@ std::vector<Entity*> EntityManager::GetEntitiesByLayer(LayerType layer) const {
     return selectedEntites;
 }
 
+Entity* EntityManager::GetEntitiesByName(std::string entityName) const {
+    for (auto& entity: entities) {
+        if(entity->name.compare(entityName) == 0) {
+            return entity;
+        }
+    }
+    return NULL;
+}
+
 Entity& EntityManager::AddEntity(std::string entityName, LayerType layer) {
     Entity *entity = new Entity(*this, entityName, layer);
     entities.emplace_back(entity);
+    #ifdef DEBUG
+        std::cout << "............ADDED-ENTITY: name = " << entityName << ", layer = " << layer << std::endl;
+    #endif
     return *entity;
 }
 
@@ -69,7 +81,13 @@ void EntityManager::CollisionTrigger (EventManager& EventManager) {
                 if (EntityA->name.compare(EntityB->name) != 0 && EntityB->HasComponent<ColliderComponent>()) {
                     ColliderComponent* ColliderB = EntityB->GetComponent<ColliderComponent>();
                     if (Collision::CheckRectangleCollision(ColliderA->collider, ColliderB->collider)) {
+                        #ifdef DEBUG
+                            std::cout << "......COLLISION-DETECTED: between " << EntityA->name << " and "<< EntityB->name << std::endl; 
+                        #endif
                         EventManager.AddCollisionEvent(COLLISION, ColliderA->colliderTag, ColliderB->colliderTag);
+                        #ifdef DEBUG
+                            std::cout << "......EVENTS-VECTOR-SIZE = " << EventManager.GetEventsSize() << std::endl;                         
+                        #endif
                     }
                 }
             }

@@ -24,7 +24,14 @@ class TransformComponent: public Component {
             height = h;
             scale = s;
             #ifdef DEBUG
-                std::cout << "......TRANSFORMCOMPONENT_H:" << posX << "-"<< posY << "-"<< velX << "-" << velY << "-" << w << "-" << h << "-" << s << std::endl;
+                std::cout << "...............ADDED-TRANSFORMCOMPONENT: " 
+                << "posX = " << posX 
+                << ", posY = " << posY 
+                << ", velX = " << velX 
+                << ", velY = " << velY 
+                << ", w = " << w 
+                << ", h = " << h 
+                << ", scale = " << s << std::endl;
             #endif
         }
 
@@ -33,6 +40,9 @@ class TransformComponent: public Component {
         }
 
         void Update(float deltaTime) override {
+            #ifdef DEBUG
+                std::cout << "......UPDATE-TRANSFORMCOMPONENT-" << this->owner->name << std::endl;
+            #endif
             position.x += velocity.x * deltaTime;
             position.y += velocity.y * deltaTime;
         }
