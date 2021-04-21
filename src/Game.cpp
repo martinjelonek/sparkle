@@ -278,7 +278,8 @@ void Game::LoadLevel(int levelNumber) {
                     static_cast<int>(entity["components"]["projectileEmitter"]["speed"]),
                     static_cast<int>(entity["components"]["projectileEmitter"]["angle"]),
                     static_cast<int>(entity["components"]["projectileEmitter"]["range"]),
-                    static_cast<bool>(entity["components"]["projectileEmitter"]["loop"])
+                    static_cast<bool>(entity["components"]["projectileEmitter"]["loop"]),
+                    newEntity.GetComponent<TransformComponent>()
                 );
             }
 

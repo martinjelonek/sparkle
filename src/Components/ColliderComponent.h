@@ -51,25 +51,6 @@ class ColliderComponent: public Component {
                 }
             }
         #endif
-
-        private:
-
-        void PlayerEnemyCollision(bool& gameIsRunning) {
-                #ifdef DEBUG
-                    #include <iostream>
-                    std::cout << "......COLIDER_COMPONENT_H-COLLISON_TRIGER-PLAYER-ENEMY-COLLISION" << std::endl;
-                #endif
-                gameIsRunning = false;
-        }
-
-        void PlayerProjectileCollision(bool& gameIsRunning) {
-            #ifdef DEBUG
-                    #include <iostream>
-                    std::cout << "......COLIDER_COMPONENT_H-COLLISON_TRIGER-PLAYER-PROJECTILE-COLLISION" << std::endl;
-            #endif
-            gameIsRunning = false;
-        }
-
 };
 
 #endif

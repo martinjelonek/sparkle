@@ -21,8 +21,8 @@ Level1 = {
             components = {
                 transform = {
                     position = {
-                        x = 240,
-                        y = 106
+                        x = 150,
+                        y = 150
                     },
                     velocity = {
                         x = 0,
@@ -61,8 +61,8 @@ Level1 = {
             components = {
                 transform = {
                     position = {
-                        x = 650,
-                        y = 405
+                        x = 200,
+                        y = 200
                     },
                     velocity = {
                         x = 20,
@@ -87,7 +87,7 @@ Level1 = {
                     height = 4,
                     speed = 50,
                     range = 200,
-                    angle = 30,
+                    angle = 275,
                     loop = true
                 }
             }

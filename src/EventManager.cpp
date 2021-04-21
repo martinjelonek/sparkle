@@ -17,7 +17,9 @@ void EventManager::HandleEvents() {
     for (unsigned int i = 0; i < events.size(); ) {
         if(events[i]->GetEventType() == COLLISION) {
             if ((events[i]->colliderTagA.compare("player") == 0 && events[i]->colliderTagB.compare("enemy") == 0) 
-            || (events[i]->colliderTagB.compare("player") == 0 && events[i]->colliderTagA.compare("enemy") == 0)) {
+            || (events[i]->colliderTagA.compare("enemy") == 0 && events[i]->colliderTagB.compare("player") == 0)
+            || (events[i]->colliderTagA.compare("player") == 0 && events[i]->colliderTagB.compare("enemy-projectile") == 0)
+            || (events[i]->colliderTagA.compare("enemy-projectile") == 0 && events[i]->colliderTagB.compare("player") == 0)) {
                 gameStop = true;    
             }
             delete events[i];
