@@ -17,6 +17,9 @@ class ColliderComponent: public Component {
         ColliderComponent(std::string colliderTag, int x, int y, int width, int height) {
             this->colliderTag = colliderTag;
             this->collider = {x, y, width, height};
+            #ifdef DEBUG
+                std::cout << "...............ADDED-COLLIDERCOMPONENT: " << "colliderTag = " << colliderTag << std::endl;
+            #endif
         }
 
         void Initialize() override {
@@ -28,26 +31,15 @@ class ColliderComponent: public Component {
         }
 
         void Update(float deltaTime) override {
+            #ifdef DEBUG
+                std::cout << "......UPDATE-COLLIDERCOMPONENT-" << this->owner->name << std::endl;
+            #endif
             collider.x = static_cast<int>(transform->position.x);
             collider.y = static_cast<int>(transform->position.y);
             collider.w = transform->width * transform->scale;
             collider.h = transform->height * transform->scale;
             destinationRectangle.x = collider.x - Game::camera.x;
             destinationRectangle.y = collider.y - Game::camera.y;                
-        }
-
-        void CollisionTriger (std::string& otherColliderTag, bool& gameIsRunning) {
-            //PLAYER - ENEMY COLLISION
-            if (colliderTag.compare("player") == 0) {
-                if (otherColliderTag.compare("enemy") == 0) PlayerEnemyCollision(gameIsRunning);
-            } else if (colliderTag.compare("enemy") == 0) {
-                if (otherColliderTag.compare("player") == 0) PlayerEnemyCollision(gameIsRunning);
-            //PLAYER - PROJECTILE COLLISION
-            } else if (colliderTag.compare("player") == 0) { 
-                if (otherColliderTag.compare("projectile") == 0) PlayerProjectileCollision(gameIsRunning);
-            } else if (colliderTag.compare("projectile") == 0) { 
-                if (otherColliderTag.compare("player") == 0) PlayerProjectileCollision(gameIsRunning);
-            }
         }
 
         #ifdef DEBUG
@@ -59,25 +51,6 @@ class ColliderComponent: public Component {
                 }
             }
         #endif
-
-        private:
-
-        void PlayerEnemyCollision(bool& gameIsRunning) {
-                #ifdef DEBUG
-                    #include <iostream>
-                    std::cout << "......COLIDER_COMPONENT_H-COLLISON_TRIGER-PLAYER-ENEMY-COLLISION" << std::endl;
-                #endif
-                gameIsRunning = false;
-        }
-
-        void PlayerProjectileCollision(bool& gameIsRunning) {
-            #ifdef DEBUG
-                    #include <iostream>
-                    std::cout << "......COLIDER_COMPONENT_H-COLLISON_TRIGER-PLAYER-PROJECTILE-COLLISION" << std::endl;
-            #endif
-            gameIsRunning = false;
-        }
-
 };
 
 #endif

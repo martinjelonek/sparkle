@@ -5,7 +5,6 @@
 int main(int argc, char *args[]) {
     #ifdef DEBUG
         std::cout << ">>>SPARKLE<<<" << std::endl;
-        std::cout << "START" << std::endl;
         unsigned int gameLoopCount = 0;
     #endif
 
@@ -20,14 +19,15 @@ int main(int argc, char *args[]) {
         #ifdef DEBUG
             gameLoopCount++;
                 std::cout << std::endl;
-                std::cout << "MAIN_CPP-INITIALIZE-MAIN_LOOP-------------->>> i = " << gameLoopCount << " <<<" << std::endl;
+                std::cout << "...MAIN_CPP::INITIALIZE-MAIN-LOOP-------------->>> i = " << gameLoopCount << " <<<" << std::endl;
         #endif
     }
 
     game.Destroy();
 
     #ifdef DEBUG
-        std::cout << "END" << std::endl;
+        std::cout << "...MAIN_CPP::INITIALIZE-MAIN-LOOP-------------->>> END" << std::endl;
+        std::cout << ">>>THE END<<<";
     #endif
     
     return 0;

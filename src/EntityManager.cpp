@@ -1,4 +1,5 @@
 #include "./EntityManager.h"
+#include "./Event.h"
 #include "./Collision.h"
 #include "./Components/ColliderComponent.h"
 #include <iostream>
@@ -52,13 +53,25 @@ std::vector<Entity*> EntityManager::GetEntitiesByLayer(LayerType layer) const {
     return selectedEntites;
 }
 
+Entity* EntityManager::GetEntitiesByName(std::string entityName) const {
+    for (auto& entity: entities) {
+        if(entity->name.compare(entityName) == 0) {
+            return entity;
+        }
+    }
+    return NULL;
+}
+
 Entity& EntityManager::AddEntity(std::string entityName, LayerType layer) {
     Entity *entity = new Entity(*this, entityName, layer);
     entities.emplace_back(entity);
+    #ifdef DEBUG
+        std::cout << "............ADDED-ENTITY: name = " << entityName << ", layer = " << layer << std::endl;
+    #endif
     return *entity;
 }
 
-void EntityManager::CheckCollisions (bool& gameIsRunning) {
+void EntityManager::CollisionTrigger (EventManager& EventManager) {
     for (int i = 0; i < entities.size() - 1; i++) {
         auto& EntityA = entities[i];
         if (EntityA->HasComponent<ColliderComponent>()) {
@@ -68,8 +81,13 @@ void EntityManager::CheckCollisions (bool& gameIsRunning) {
                 if (EntityA->name.compare(EntityB->name) != 0 && EntityB->HasComponent<ColliderComponent>()) {
                     ColliderComponent* ColliderB = EntityB->GetComponent<ColliderComponent>();
                     if (Collision::CheckRectangleCollision(ColliderA->collider, ColliderB->collider)) {
-                        ColliderA->CollisionTriger(ColliderB->colliderTag, gameIsRunning);
-                        ColliderB->CollisionTriger(ColliderA->colliderTag, gameIsRunning);
+                        #ifdef DEBUG
+                            std::cout << "......COLLISION-DETECTED: between " << EntityA->name << " and "<< EntityB->name << std::endl; 
+                        #endif
+                        EventManager.AddCollisionEvent(COLLISION, ColliderA->colliderTag, ColliderB->colliderTag);
+                        #ifdef DEBUG
+                            std::cout << "......EVENTS-VECTOR-SIZE = " << EventManager.GetEventsSize() << std::endl;                         
+                        #endif
                     }
                 }
             }

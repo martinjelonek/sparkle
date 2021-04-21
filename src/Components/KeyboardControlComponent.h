@@ -18,7 +18,9 @@ class KeyboardControlComponent: public Component {
         SpriteComponent *sprite;
 
         KeyboardControlComponent () {
-
+            #ifdef DEBUG
+                std::cout << "...............ADDED-KEYBOARDCONTROLCOMPONENT" << std::endl;
+            #endif
         }
 
         KeyboardControlComponent (std::string upKey, std::string rightKey, std::string downKey, std::string leftKey, std::string shootKey) {
@@ -27,6 +29,15 @@ class KeyboardControlComponent: public Component {
             this->downKey = GetSDLKeyStringCode(downKey);
             this->leftKey = GetSDLKeyStringCode(leftKey);
             this->shootKey = GetSDLKeyStringCode(shootKey);
+            #ifdef DEBUG
+                std::cout << "...............ADDED-KEYBOARDCONTROLCOMPONENT: " 
+                << "upKey = " << upKey 
+                << ", rightKey = " << rightKey
+                << ", downKey = " << downKey
+                << ", leftKey = " << leftKey
+                << "shootKey" << shootKey
+                << std::endl;
+            #endif
         }
 
         std::string GetSDLKeyStringCode(std::string key) {

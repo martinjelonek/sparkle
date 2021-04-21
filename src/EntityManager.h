@@ -5,6 +5,7 @@
 #include "./Game.h"
 #include "./Component.h"
 #include "./Constants.h"
+#include "./EventManager.h"
 #include <string>
 #include <vector>
 
@@ -21,8 +22,9 @@ class EntityManager {
         void ListAllEntities() const;       
         std::vector<Entity*> GetEntities() const;
         std::vector<Entity*> GetEntitiesByLayer(LayerType layer) const;
+        Entity* GetEntitiesByName(std::string entityName) const;
         Entity& AddEntity(std::string entityName, LayerType layer);
-        void CheckCollisions(bool& gameIsRunning);
+        void CollisionTrigger(EventManager& eventManager);
 };
 
 #endif
