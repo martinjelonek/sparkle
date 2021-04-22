@@ -5,7 +5,8 @@ Level1 = {
         [2] = { type="texture", id = "troops", file = "./assets/images/troops.png"},
         [3] = { type="texture", id = "troops-moveing", file = "./assets/images/troops-moveing.png"},
         [4] = { type="texture", id = "enemy-projectile", file = "./assets/images/enemy-projectile.png"},
-        [5] = { type="font", id = "pixeldown", file = "./assets/fonts/pixeldown.ttf", fontSize = 14}
+        [5] = { type="texture", id = "ship", file = "./assets/images/ship.png"},
+        [6] = { type="font", id = "pixeldown", file = "./assets/fonts/pixeldown.ttf", fontSize = 14}
     },
     map = {
         textureAssetId = "terrain-fields",
@@ -134,6 +135,46 @@ Level1 = {
             }
         },
         [3] = {
+            name = "ship-enemy-2",
+            layer = 2,
+            components = {
+                transform = {
+                    position = {
+                        x = 192,
+                        y = 320
+                    },
+                    velocity = {
+                        x = 10,
+                        y = 0,
+                    },
+                    width = 96,
+                    height = 64,
+                    scale = 1,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "ship",
+                    animated = true,
+                    hasDirection = false;
+                    frameCount = 2,
+                    animationSpeed = 1000,
+                    fixed = false
+                },
+                collider = {
+                    tag = "enemy"
+                },
+                projectileEmitter = {
+                    textureAssetId = "enemy-projectile",
+                    width = 20,
+                    height = 20,
+                    speed = 50,
+                    range = 200,
+                    angle = 275,
+                    loop = true
+                }
+            }
+        },
+        [4] = {
             name = "label-title",
             layer = 5,
             components = {
