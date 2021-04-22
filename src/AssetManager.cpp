@@ -24,5 +24,14 @@ SDL_Texture* AssetManager::GetTexture(std::string textureId) {
 }
 
 TTF_Font* AssetManager::GetFont(std::string fontId) {
+    #ifdef DEBUG
+        std::cout << "........................CHECK-1" << std::endl;
+    for(auto const &pair: fonts) {
+        std::cout << "...........................map-fonts[0] = "<< pair.first << " and " << pair.second << std::endl;
+    }
+    #endif
     return fonts[fontId];
+    #ifdef DEBUG
+        std::cout << "........................CHECK-2-END" << std::endl;
+    #endif
 }

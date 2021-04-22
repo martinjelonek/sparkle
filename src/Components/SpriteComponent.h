@@ -25,12 +25,12 @@ class SpriteComponent: public Component {
         SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
         SpriteComponent(std::string id, bool isAnimated) {
-            this->isAnimated = isAnimated;
-            this->isFixed = false;
-            SetTexture(id);
             #ifdef DEBUG
                 std::cout << "...............ADDED-SPRITECOMPONENT: " << "id = " << id << ", isAnimated = " << isAnimated << std::endl;
             #endif
+            this->isAnimated = isAnimated;
+            this->isFixed = false;
+            SetTexture(id);
         }
 
         SpriteComponent(std::string id, unsigned int numFrames, unsigned int animationSpeed, bool hasDirections, bool isFixed) {
