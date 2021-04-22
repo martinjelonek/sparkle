@@ -6,7 +6,8 @@ Level1 = {
         [3] = { type="texture", id = "troops-moveing", file = "./assets/images/troops-moveing.png"},
         [4] = { type="texture", id = "enemy-projectile", file = "./assets/images/enemy-projectile.png"},
         [5] = { type="texture", id = "ship", file = "./assets/images/ship.png"},
-        [6] = { type="font", id = "pixeldown", file = "./assets/fonts/pixeldown.ttf", fontSize = 14}
+        [6] = { type="texture", id = "tower", file = "./assets/images/tower.png"},
+        [7] = { type="font", id = "pixeldown", file = "./assets/fonts/pixeldown.ttf", fontSize = 14}
     },
     map = {
         textureAssetId = "terrain-fields",
@@ -135,7 +136,7 @@ Level1 = {
             }
         },
         [3] = {
-            name = "ship-enemy-2",
+            name = "ship-enemy-1",
             layer = 2,
             components = {
                 transform = {
@@ -175,6 +176,46 @@ Level1 = {
             }
         },
         [4] = {
+            name = "tower-enemy-1",
+            layer = 2,
+            components = {
+                transform = {
+                    position = {
+                        x = 480,
+                        y = 384
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0,
+                    },
+                    width = 32,
+                    height = 64,
+                    scale = 1,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "tower",
+                    animated = true,
+                    hasDirection = false;
+                    frameCount = 2,
+                    animationSpeed = 700,
+                    fixed = false
+                },
+                collider = {
+                    tag = "enemy"
+                },
+                projectileEmitter = {
+                    textureAssetId = "enemy-projectile",
+                    width = 20,
+                    height = 20,
+                    speed = 50,
+                    range = 200,
+                    angle = 180,
+                    loop = true
+                }
+            }
+        },
+        [5] = {
             name = "label-title",
             layer = 5,
             components = {
