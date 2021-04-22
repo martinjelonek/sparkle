@@ -113,6 +113,9 @@ void Game::LoadLevel(int levelNumber) {
                 std::string assetId = asset["id"];
                 std::string assetFile = asset["file"];
                 assetManager->AddFont(assetId, assetFile.c_str(), static_cast<int>(asset["fontSize"]));
+                #ifdef DEBUG
+                    std::cout << "............ADDED-ASSET: assetType = " << assetType << ", assetId = " << assetId << ", assetFile = " << assetFile << std::endl;
+                #endif
             }
             assetsIndex++;
         }
@@ -124,7 +127,7 @@ void Game::LoadLevel(int levelNumber) {
     #endif
 
     /****************************************************/
-    /* LOADING MAPS FORM LUA CONFIG FILE                */
+    /* LOADING MAPS FORM LUA FILE                       */
     /****************************************************/
 
     sol::table levelMap = levelData["map"];
@@ -159,7 +162,7 @@ void Game::LoadLevel(int levelNumber) {
     #endif
 
     /****************************************************/
-    /* LOADING ENTITIES FORM LUA CONFIG FILE            */
+    /* LOADING ENTITIES FORM LUA FILE                   */
     /****************************************************/
 
     sol::table entities = levelData["entities"];
@@ -238,6 +241,21 @@ void Game::LoadLevel(int levelNumber) {
                 std::string shootKey = entity["components"]["input"]["keyboard"]["shoot"];
                 newEntity.AddComponent<KeyboardControlComponent>(upKey, rightKey, downKey, leftKey, shootKey);
             }
+            //add label component
+            sol::optional<sol::table> existsLabelIndexNode = entity["components"]["label"];
+            if (existsLabelIndexNode != sol::nullopt) {
+                std::string text = entity["components"]["label"]["text"];
+                std::string fontFamily = entity["components"]["label"]["fontFamily"];
+                std::string color = entity["components"]["label"]["color"];
+                newEntity.AddComponent<TextLabelComponent>(
+                    static_cast<int>(entity["components"]["label"]["x"]),
+                    static_cast<int>(entity["components"]["label"]["y"]),
+                    text,
+                    fontFamily,
+                    color
+                );
+            } 
+
             //add projectile entity
             sol::optional<sol::table> existsProjectileEmitterIndexNode = entity["components"]["projectileEmitter"];
             if (existsProjectileEmitterIndexNode != sol::nullopt) {

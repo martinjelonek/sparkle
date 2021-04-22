@@ -4,7 +4,7 @@ Level1 = {
         [1] = { type="texture", id = "wildhammer", file = "./assets/images/wildhammer.png"},
         [2] = { type="texture", id = "catapult", file = "./assets/images/catapult-big-right.png"},
         [3] = { type="texture", id = "enemy-projectile", file = "./assets/images/enemy-projectile.png"},
-        [4] = { type="font", id = "pixeldown", file = "./assets/fonts/pixeldown.png", fontSize = 14}
+        [4] = { type="font", id = "pixeldown", file = "./assets/fonts/pixeldown.ttf", fontSize = 14}
     },
     map = {
         textureAssetId = "terrain-fields",
@@ -89,6 +89,19 @@ Level1 = {
                     range = 200,
                     angle = 275,
                     loop = true
+                }
+            }
+        },
+        [2] = {
+            name = "label-title",
+            layer = 5,
+            components = {
+                label = {
+                    x = 5,
+                    y = 5,
+                    text = "wildhammer",
+                    fontFamily = "pixeldown",
+                    color = "WHITE_COLOR"
                 }
             }
         }
