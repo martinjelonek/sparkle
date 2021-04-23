@@ -61,7 +61,7 @@ void Game::Initialize(int width, int height) {
         std::cerr << "Error creating SDL renderer." << std::endl;
     }
 
-    LoadLevel(1);
+    LoadScene(0);
 
     isRunning = true;
     #ifdef DEBUG
@@ -70,19 +70,19 @@ void Game::Initialize(int width, int height) {
     return;
 }
 
-void Game::LoadLevel(int levelNumber) {
+void Game::LoadScene(int sceneNumber) {
     #ifdef DEBUG
-        std::cout << "......GAME.CPP::LOADLEVEL" << levelNumber << "-BEGIN" << std::endl;
+        std::cout << "......GAME.CPP::LOADSCENE" << sceneNumber << "-BEGIN" << std::endl;
         std::cout << ".........SOL-PREPARATION-BEGIN" << std::endl;
     #endif
     //Lua preparation
     sol::state lua;
     lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
 
-    std::string levelName = "Level" + std::to_string(levelNumber);
-    lua.script_file("./assets/scripts/" + levelName + ".lua");
+    std::string sceneName = "Scene" + std::to_string(sceneNumber);
+    lua.script_file("./assets/scripts/" + sceneName + ".lua");
 
-    sol::table levelData = lua[levelName];
+    sol::table levelData = lua[sceneName];
     
     #ifdef DEBUG
         std::cout << ".........SOL-PREPARATION-END" << std::endl;
@@ -141,37 +141,43 @@ void Game::LoadLevel(int levelNumber) {
     /****************************************************/
     /* LOADING MAPS FORM LUA FILE                       */
     /****************************************************/
+    sol::optional<sol::table> existsMapNode = levelData["map"];
+    if(existsMapNode == sol::nullopt) {
+        #ifdef DEBUG
+            std::cout << ".........SOL-MAPNOTDETECTED" << std::endl;
+        #endif
+    } else {
+        sol::table levelMap = levelData["map"];
+        std::string mapTextureId = levelMap["textureAssetId"];
+        std::string mapFile = levelMap["file"];
 
-    sol::table levelMap = levelData["map"];
-    std::string mapTextureId = levelMap["textureAssetId"];
-    std::string mapFile = levelMap["file"];
+        map = new Map{
+            mapTextureId,
+            static_cast<int>(levelMap["scale"]),
+            static_cast<int>(levelMap["tileSize"])
+        };
 
-    map = new Map{
-        mapTextureId,
-        static_cast<int>(levelMap["scale"]),
-        static_cast<int>(levelMap["tileSize"])
-    };
+        map->LoadMap (
+            mapFile, 
+            static_cast<int>(levelMap["mapSizeX"]),
+            static_cast<int>(levelMap["mapSizeY"])
+        );
 
-    map->LoadMap (
-        mapFile, 
-        static_cast<int>(levelMap["mapSizeX"]),
-        static_cast<int>(levelMap["mapSizeY"])
-    );
-
-    #ifdef DEBUG
-        std::string text = "";
-        std::cout << "............ADDED-MAP: mapTextureId = " << mapTextureId << ", mapFile = " << mapFile;
-        text = levelMap["scale"];
-        std::cout << ", scale = " << text;
-        text = levelMap["tileSize"];
-        std::cout << ", tileSize = " << text;
-        text = levelMap["mapSizeX"];
-        std::cout << ", mapSizeX = " << text;
-        text = levelMap["mapSizeY"];
-        std::cout << ", mapSizeY = " << text << std::endl;
-        std::cout << ".........SOL-LOADING-MAP-END" << std::endl;
-        std::cout << ".........SOL-LOADING-ENTITIES-BEGIN" << std::endl;
-    #endif
+        #ifdef DEBUG
+            std::string text = "";
+            std::cout << "............ADDED-MAP: mapTextureId = " << mapTextureId << ", mapFile = " << mapFile;
+            text = levelMap["scale"];
+            std::cout << ", scale = " << text;
+            text = levelMap["tileSize"];
+            std::cout << ", tileSize = " << text;
+            text = levelMap["mapSizeX"];
+            std::cout << ", mapSizeX = " << text;
+            text = levelMap["mapSizeY"];
+            std::cout << ", mapSizeY = " << text << std::endl;
+            std::cout << ".........SOL-LOADING-MAP-END" << std::endl;
+            std::cout << ".........SOL-LOADING-ENTITIES-BEGIN" << std::endl;
+        #endif
+    }    
 
     /****************************************************/
     /* LOADING ENTITIES FORM LUA FILE                   */
@@ -324,7 +330,7 @@ void Game::LoadLevel(int levelNumber) {
     }
 
     #ifdef DEBUG
-        std::cout << "GAME.CPP-LOADLEVEL" << levelNumber << "-END" << std::endl;
+        std::cout << "GAME.CPP-LOADSCENE" << sceneNumber << "-END" << std::endl;
     #endif
 
     //get player entity (if exist)

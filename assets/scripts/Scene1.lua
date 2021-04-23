@@ -1,4 +1,4 @@
-Level1 = {
+Scene1 = {
     conf = {
         sceneWidth = 1600,
         sceneHeight = 1280
@@ -113,7 +113,7 @@ Level1 = {
                     },
                     velocity = {
                         x = 0,
-                        y = 0,
+                        y = 0
                     },
                     width = 32,
                     height = 32,

@@ -28,7 +28,7 @@ class Game {
         static AssetManager* assetManager;
         static SDL_Event event;
         static SDL_Rect camera;
-        void LoadLevel(int levelNumber);
+        void LoadScene(int levelNumber);
         void Initialize(int width, int height);
         void ProcessInput ();
         void Update();
