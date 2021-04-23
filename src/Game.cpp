@@ -73,7 +73,7 @@ void Game::Initialize(int width, int height) {
 void Game::LoadLevel(int levelNumber) {
     #ifdef DEBUG
         std::cout << "......GAME.CPP::LOADLEVEL" << levelNumber << "-BEGIN" << std::endl;
-        std::cout << ".........SOL-CONF-BEGIN" << std::endl;
+        std::cout << ".........SOL-PREPARATION-BEGIN" << std::endl;
     #endif
     //Lua preparation
     sol::state lua;
@@ -85,7 +85,19 @@ void Game::LoadLevel(int levelNumber) {
     sol::table levelData = lua[levelName];
     
     #ifdef DEBUG
-        std::cout << ".........SOL-CONF-END" << std::endl;
+        std::cout << ".........SOL-PREPARATION-END" << std::endl;
+        std::cout << ".........SOL-LOADING-CONF-BEGIN" << std::endl;
+    #endif
+    
+    /****************************************************/
+    /* LOADING CONF FORM LUA CONFIG FILE                */
+    /****************************************************/
+    sol::table levelConf = levelData["conf"];
+    sceneSize.x = static_cast<int>(levelConf["sceneWidth"]);
+    sceneSize.y = static_cast<int>(levelConf["sceneHeight"]);
+
+    #ifdef DEBUG
+        std::cout << ".........SOL-LOADING-CONF-END" << std::endl;
         std::cout << ".........SOL-LOADING-ASSETS-BEGIN" << std::endl;
     #endif
 
@@ -380,9 +392,8 @@ void Game::HandleCameraMovement () {
 
     camera.x = camera.x < 0 ? 0 : camera.x;
     camera.y = camera.y < 0 ? 0 : camera.y;
-    camera.x = camera.x > camera.w ? camera.w : camera.x;
-    camera.y = camera.y > camera.h ? camera.h : camera.y;
-
+    camera.x = camera.x > (sceneSize.x - camera.w) ? (sceneSize.x - camera.w) : camera.x;
+    camera.y = camera.y > (sceneSize.y - camera.h) ? (sceneSize.y - camera.h) : camera.y;
     }
 }
 

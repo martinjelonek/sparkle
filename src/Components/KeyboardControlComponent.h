@@ -69,7 +69,7 @@ class KeyboardControlComponent: public Component {
                     sprite->Play("UpAnimation");
                 }
                 if(keyCode.compare(rightKey) == 0) {
-                    if (transform->position.x + transform->width >= WINDOW_WIDTH * 2) {
+                    if (transform->position.x + transform->width >= 1000) {
                         transform->velocity.y = 0;
                         transform->velocity.x = 0;
                     } else {
@@ -79,7 +79,7 @@ class KeyboardControlComponent: public Component {
                     sprite->Play("RightAnimation");
                 }
                 if(keyCode.compare(downKey) == 0) {
-                    if (transform->position.y + transform->height >= WINDOW_HEIGHT * 2) {
+                    if (transform->position.y + transform->height >= 1000) {
                         transform->velocity.y = 0;
                         transform->velocity.x = 0;
                     } else {

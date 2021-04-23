@@ -1,4 +1,8 @@
 Level1 = {
+    conf = {
+        sceneWidth = 1600,
+        sceneHeight = 1280
+    },
     assets = {
         [0] = { type="texture", id = "terrain-fields", file = "./assets/tilemaps/fields.png"},
         [1] = { type="texture", id = "wildhammer", file = "./assets/images/wildhammer.png"},
