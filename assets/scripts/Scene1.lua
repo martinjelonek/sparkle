@@ -18,7 +18,7 @@ Scene1 = {
             ----navigate between scenes
             --set scene number or NULL
             key1 = "NULL",
-            key2 = "NULL",
+            key2 = "0",
             --set scene number, CLOSE for close the app or NULL
             keyEsc = "0",
             --set scene number or NULL

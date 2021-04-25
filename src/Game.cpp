@@ -359,23 +359,69 @@ void Game::ProcessInput() {
         isRunning = false;
         break;
     case SDL_KEYDOWN:
+        //KEY - 1
         if(event.key.keysym.sym == SDLK_1) {
-            //KEY - 1
+        
             #ifdef DEBUG
                 std::cout << "......KEY 1 PRESSED: value " << key1 << std::endl;
             #endif
             if (key1.compare("NULL") != 0) {
-                manager.ClearData();
-                eventManager.DestroyAllEvents();
-                LoadScene(std::stoi(key1));
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    manager.ClearData();
+                    eventManager.DestroyAllEvents();
+                    LoadScene(std::stoi(key1));
+                    sceneChangeCooldown = SDL_GetTicks();
+                }
             }
-            //KEY - 2
-            //KEY - ESC
-            //KEY - ENTER
         }
-
+        //KEY - 2
+        if(event.key.keysym.sym == SDLK_2) {
+        
+            #ifdef DEBUG
+                std::cout << "......KEY 2 PRESSED: value " << key1 << std::endl;
+            #endif
+            if (key2.compare("NULL") != 0) {
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    manager.ClearData();
+                    eventManager.DestroyAllEvents();
+                    LoadScene(std::stoi(key2));
+                    sceneChangeCooldown = SDL_GetTicks();
+                }                    
+            }
+        }
+        //KEY - ESC
+        if(event.key.keysym.sym == SDLK_KP_ENTER) {
+            #ifdef DEBUG
+                std::cout << "......KEY ENTER PRESSED: value " << key1 << std::endl;
+            #endif
+            if (keyEnter.compare("NULL") != 0) {
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    manager.ClearData();
+                    eventManager.DestroyAllEvents();
+                    LoadScene(std::stoi(keyEnter));
+                    sceneChangeCooldown = SDL_GetTicks();
+                }                
+            }
+        }
+        //KEY - ENTER
         if(event.key.keysym.sym == SDLK_ESCAPE) {
-            isRunning = false;
+            #ifdef DEBUG
+                std::cout << "......KEY ESC PRESSED: value " << keyEsc << std::endl;
+            #endif
+            if (keyEsc.compare("NULL") == 0) {
+
+            } else if (keyEsc.compare("CLOSE") == 0) {
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    isRunning = false;
+                }
+            } else {
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    manager.ClearData();
+                    eventManager.DestroyAllEvents();
+                    LoadScene(std::stoi(keyEsc));
+                    sceneChangeCooldown = SDL_GetTicks();
+                }
+            }       
         }
     default:
         break;

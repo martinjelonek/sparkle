@@ -23,6 +23,7 @@ class Game {
         std::string key2 = "NULL";
         std::string keyEsc = "QUIT";
         std::string keyEnter = "NULL";
+        unsigned int sceneChangeCooldown = 0;
 
     public:
         Game();
