@@ -20,6 +20,18 @@ Scene0 = {
         sceneWidth = 1600,
         sceneHeight = 1280
     },
+    control = {
+        keyboard = {
+            ----navigate between scenes
+            --set scene number or NULL
+            key1 = "1",
+            key2 = "5",
+            --set scene number, CLOSE for close the app or NULL
+            keyEsc = "CLOSE",
+            --set scene number or NULL
+            keyEnter = "NULL"
+        }
+    },
     assets = {
         [0] = { type="font", id = "pixeldown7", file = "./assets/fonts/pixeldown.ttf", fontSize = 7},
         [1] = { type="font", id = "pixeldown19", file = "./assets/fonts/pixeldown.ttf", fontSize = 19},
@@ -113,7 +125,7 @@ Scene0 = {
                 label = {
                     x = MarginFirstLineX + KeyTextSpace,
                     y = MarginFirstLineY - 12,
-                    text = "run wildhammer game",
+                    text = "wildhammer game",
                     fontFamily = "pixeldown19",
                     color = "WHITE_COLOR"
                 }
@@ -151,7 +163,7 @@ Scene0 = {
                 label = {
                     x = MarginSecondLineX + KeyTextSpace,
                     y = MarginSecondLineY - 12,
-                    text = "run map editor",
+                    text = "map editor",
                     fontFamily = "pixeldown19",
                     color = "WHITE_COLOR"
                 }

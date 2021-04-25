@@ -9,6 +9,7 @@
 #include "./Entity.h"
 #include "./Component.h"
 #include "./EntityManager.h"
+#include <string>
 
 using namespace glm;
 
@@ -18,6 +19,11 @@ class Game {
     private:      
         SDL_Window *window;
         vec2 sceneSize;
+        std::string key1 = "NULL";
+        std::string key2 = "NULL";
+        std::string keyEsc = "QUIT";
+        std::string keyEnter = "NULL";
+
     public:
         Game();
         ~Game();

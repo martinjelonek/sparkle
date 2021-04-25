@@ -13,6 +13,18 @@ Scene1 = {
         [6] = { type="texture", id = "tower", file = "./assets/images/tower.png"},
         [7] = { type="font", id = "pixeldown", file = "./assets/fonts/pixeldown.ttf", fontSize = 14}
     },
+    control = {
+        keyboard = {
+            ----navigate between scenes
+            --set scene number or NULL
+            key1 = "NULL",
+            key2 = "NULL",
+            --set scene number, CLOSE for close the app or NULL
+            keyEsc = "0",
+            --set scene number or NULL
+            keyEnter = "NULL"
+        }
+    },
     map = {
         textureAssetId = "terrain-fields",
         file = "./assets/tilemaps/fields.map",

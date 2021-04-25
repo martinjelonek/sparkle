@@ -98,6 +98,20 @@ void Game::LoadScene(int sceneNumber) {
 
     #ifdef DEBUG
         std::cout << ".........SOL-LOADING-CONF-END" << std::endl;
+        std::cout << ".........SOL-LOADING-CONTROL-BEGIN" << std::endl;
+    #endif
+    
+    /****************************************************/
+    /* LOADING CONTROL FORM LUA CONFIG FILE             */
+    /****************************************************/
+    sol::table levelControl = levelData["control"];
+    key1 = levelControl["keyboard"]["key1"];
+    key2 = levelControl["keyboard"]["key2"];
+    keyEsc = levelControl["keyboard"]["keyEsc"];
+    keyEnter = levelControl["keyboard"]["keyEnter"];
+
+    #ifdef DEBUG
+        std::cout << ".........SOL-LOADING-CONTROL-END" << std::endl;
         std::cout << ".........SOL-LOADING-ASSETS-BEGIN" << std::endl;
     #endif
 
@@ -345,7 +359,24 @@ void Game::ProcessInput() {
         isRunning = false;
         break;
     case SDL_KEYDOWN:
-        if(event.key.keysym.sym == SDLK_ESCAPE) isRunning = false;
+        if(event.key.keysym.sym == SDLK_1) {
+            //KEY - 1
+            #ifdef DEBUG
+                std::cout << "......KEY 1 PRESSED: value " << key1 << std::endl;
+            #endif
+            if (key1.compare("NULL") != 0) {
+                manager.ClearData();
+                eventManager.DestroyAllEvents();
+                LoadScene(std::stoi(key1));
+            }
+            //KEY - 2
+            //KEY - ESC
+            //KEY - ENTER
+        }
+
+        if(event.key.keysym.sym == SDLK_ESCAPE) {
+            isRunning = false;
+        }
     default:
         break;
     }
