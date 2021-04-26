@@ -4,8 +4,8 @@
 #include <SDL2/SDL.h>
 
 //WINDOW
-const unsigned int WINDOW_WIDTH = 800;
-const unsigned int WINDOW_HEIGHT = 600;
+const unsigned int WINDOW_WIDTH = 1280;
+const unsigned int WINDOW_HEIGHT = 720;
 
 //TIMESTEP - DELTA TIME
 const unsigned int FPS = 60;
@@ -37,8 +37,8 @@ const int PLAYER_SPEED = 100;
 
 //SETTINGS (DEBUG ONLY)
 #ifdef DEBUG
-    const bool SHOW_COLLIDER_BOX = true;
-    const bool SHOW_TRANSFORM_BOX = true;
+    const bool SHOW_COLLIDER_BOX = false;
+    const bool SHOW_TRANSFORM_BOX = false;
     const bool SHOW_TEXTURE_RENDER_INFO = false; // TextureManager.cpp
 #endif
 

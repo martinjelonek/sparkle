@@ -1,4 +1,10 @@
-Level1 = {
+-- WILDAMMER - LEVEL 1
+
+Scene2 = {
+    conf = {
+        sceneWidth = 1600,
+        sceneHeight = 1280
+    },
     assets = {
         [0] = { type="texture", id = "terrain-fields", file = "./assets/tilemaps/fields.png"},
         [1] = { type="texture", id = "wildhammer", file = "./assets/images/wildhammer.png"},
@@ -8,6 +14,18 @@ Level1 = {
         [5] = { type="texture", id = "ship", file = "./assets/images/ship.png"},
         [6] = { type="texture", id = "tower", file = "./assets/images/tower.png"},
         [7] = { type="font", id = "pixeldown", file = "./assets/fonts/pixeldown.ttf", fontSize = 14}
+    },
+    control = {
+        keyboard = {
+            ----navigate between scenes
+            --set scene number or NULL
+            key1 = "NULL",
+            key2 = "NULL",
+            --set scene number, CLOSE for close the app or NULL
+            keyEsc = "0",
+            --set scene number or NULL
+            keyEnter = "3"
+        }
     },
     map = {
         textureAssetId = "terrain-fields",
@@ -109,7 +127,7 @@ Level1 = {
                     },
                     velocity = {
                         x = 0,
-                        y = 0,
+                        y = 0
                     },
                     width = 32,
                     height = 32,

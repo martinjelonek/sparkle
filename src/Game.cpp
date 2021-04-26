@@ -61,7 +61,7 @@ void Game::Initialize(int width, int height) {
         std::cerr << "Error creating SDL renderer." << std::endl;
     }
 
-    LoadLevel(1);
+    LoadScene(0);
 
     isRunning = true;
     #ifdef DEBUG
@@ -70,22 +70,48 @@ void Game::Initialize(int width, int height) {
     return;
 }
 
-void Game::LoadLevel(int levelNumber) {
+void Game::LoadScene(int sceneNumber) {
     #ifdef DEBUG
-        std::cout << "......GAME.CPP::LOADLEVEL" << levelNumber << "-BEGIN" << std::endl;
-        std::cout << ".........SOL-CONF-BEGIN" << std::endl;
+        std::cout << "......GAME.CPP::LOADSCENE" << sceneNumber << "-BEGIN" << std::endl;
+        std::cout << ".........SOL-PREPARATION-BEGIN" << std::endl;
     #endif
     //Lua preparation
     sol::state lua;
     lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
 
-    std::string levelName = "Level" + std::to_string(levelNumber);
-    lua.script_file("./assets/scripts/" + levelName + ".lua");
+    std::string sceneName = "Scene" + std::to_string(sceneNumber);
+    lua.script_file("./assets/scripts/" + sceneName + ".lua");
 
-    sol::table levelData = lua[levelName];
+    sol::table levelData = lua[sceneName];
     
     #ifdef DEBUG
-        std::cout << ".........SOL-CONF-END" << std::endl;
+        std::cout << ".........SOL-PREPARATION-END" << std::endl;
+        std::cout << ".........SOL-LOADING-CONF-BEGIN" << std::endl;
+    #endif
+    
+    /****************************************************/
+    /* LOADING CONF FORM LUA CONFIG FILE                */
+    /****************************************************/
+    sol::table levelConf = levelData["conf"];
+    sceneSize.x = static_cast<int>(levelConf["sceneWidth"]);
+    sceneSize.y = static_cast<int>(levelConf["sceneHeight"]);
+
+    #ifdef DEBUG
+        std::cout << ".........SOL-LOADING-CONF-END" << std::endl;
+        std::cout << ".........SOL-LOADING-CONTROL-BEGIN" << std::endl;
+    #endif
+    
+    /****************************************************/
+    /* LOADING CONTROL FORM LUA CONFIG FILE             */
+    /****************************************************/
+    sol::table levelControl = levelData["control"];
+    key1 = levelControl["keyboard"]["key1"];
+    key2 = levelControl["keyboard"]["key2"];
+    keyEsc = levelControl["keyboard"]["keyEsc"];
+    keyEnter = levelControl["keyboard"]["keyEnter"];
+
+    #ifdef DEBUG
+        std::cout << ".........SOL-LOADING-CONTROL-END" << std::endl;
         std::cout << ".........SOL-LOADING-ASSETS-BEGIN" << std::endl;
     #endif
 
@@ -129,37 +155,43 @@ void Game::LoadLevel(int levelNumber) {
     /****************************************************/
     /* LOADING MAPS FORM LUA FILE                       */
     /****************************************************/
+    sol::optional<sol::table> existsMapNode = levelData["map"];
+    if(existsMapNode == sol::nullopt) {
+        #ifdef DEBUG
+            std::cout << ".........SOL-MAPNOTDETECTED" << std::endl;
+        #endif
+    } else {
+        sol::table levelMap = levelData["map"];
+        std::string mapTextureId = levelMap["textureAssetId"];
+        std::string mapFile = levelMap["file"];
 
-    sol::table levelMap = levelData["map"];
-    std::string mapTextureId = levelMap["textureAssetId"];
-    std::string mapFile = levelMap["file"];
+        map = new Map{
+            mapTextureId,
+            static_cast<int>(levelMap["scale"]),
+            static_cast<int>(levelMap["tileSize"])
+        };
 
-    map = new Map{
-        mapTextureId,
-        static_cast<int>(levelMap["scale"]),
-        static_cast<int>(levelMap["tileSize"])
-    };
+        map->LoadMap (
+            mapFile, 
+            static_cast<int>(levelMap["mapSizeX"]),
+            static_cast<int>(levelMap["mapSizeY"])
+        );
 
-    map->LoadMap (
-        mapFile, 
-        static_cast<int>(levelMap["mapSizeX"]),
-        static_cast<int>(levelMap["mapSizeY"])
-    );
-
-    #ifdef DEBUG
-        std::string text = "";
-        std::cout << "............ADDED-MAP: mapTextureId = " << mapTextureId << ", mapFile = " << mapFile;
-        text = levelMap["scale"];
-        std::cout << ", scale = " << text;
-        text = levelMap["tileSize"];
-        std::cout << ", tileSize = " << text;
-        text = levelMap["mapSizeX"];
-        std::cout << ", mapSizeX = " << text;
-        text = levelMap["mapSizeY"];
-        std::cout << ", mapSizeY = " << text << std::endl;
-        std::cout << ".........SOL-LOADING-MAP-END" << std::endl;
-        std::cout << ".........SOL-LOADING-ENTITIES-BEGIN" << std::endl;
-    #endif
+        #ifdef DEBUG
+            std::string text = "";
+            std::cout << "............ADDED-MAP: mapTextureId = " << mapTextureId << ", mapFile = " << mapFile;
+            text = levelMap["scale"];
+            std::cout << ", scale = " << text;
+            text = levelMap["tileSize"];
+            std::cout << ", tileSize = " << text;
+            text = levelMap["mapSizeX"];
+            std::cout << ", mapSizeX = " << text;
+            text = levelMap["mapSizeY"];
+            std::cout << ", mapSizeY = " << text << std::endl;
+            std::cout << ".........SOL-LOADING-MAP-END" << std::endl;
+            std::cout << ".........SOL-LOADING-ENTITIES-BEGIN" << std::endl;
+        #endif
+    }    
 
     /****************************************************/
     /* LOADING ENTITIES FORM LUA FILE                   */
@@ -312,7 +344,7 @@ void Game::LoadLevel(int levelNumber) {
     }
 
     #ifdef DEBUG
-        std::cout << "GAME.CPP-LOADLEVEL" << levelNumber << "-END" << std::endl;
+        std::cout << "GAME.CPP-LOADSCENE" << sceneNumber << "-END" << std::endl;
     #endif
 
     //get player entity (if exist)
@@ -327,7 +359,70 @@ void Game::ProcessInput() {
         isRunning = false;
         break;
     case SDL_KEYDOWN:
-        if(event.key.keysym.sym == SDLK_ESCAPE) isRunning = false;
+        //KEY - 1
+        if(event.key.keysym.sym == SDLK_1) {
+        
+            #ifdef DEBUG
+                std::cout << "......KEY 1 PRESSED: value " << key1 << std::endl;
+            #endif
+            if (key1.compare("NULL") != 0) {
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    manager.ClearData();
+                    eventManager.DestroyAllEvents();
+                    LoadScene(std::stoi(key1));
+                    sceneChangeCooldown = SDL_GetTicks();
+                }
+            }
+        }
+        //KEY - 2
+        if(event.key.keysym.sym == SDLK_2) {
+        
+            #ifdef DEBUG
+                std::cout << "......KEY 2 PRESSED: value " << key1 << std::endl;
+            #endif
+            if (key2.compare("NULL") != 0) {
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    manager.ClearData();
+                    eventManager.DestroyAllEvents();
+                    LoadScene(std::stoi(key2));
+                    sceneChangeCooldown = SDL_GetTicks();
+                }                    
+            }
+        }
+        //KEY - ESC
+        if(event.key.keysym.sym == SDLK_KP_ENTER || event.key.keysym.sym == SDLK_RETURN) {
+            #ifdef DEBUG
+                std::cout << "......KEY ENTER PRESSED: value " << key1 << std::endl;
+            #endif
+            if (keyEnter.compare("NULL") != 0) {
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    manager.ClearData();
+                    eventManager.DestroyAllEvents();
+                    LoadScene(std::stoi(keyEnter));
+                    sceneChangeCooldown = SDL_GetTicks();
+                }                
+            }
+        }
+        //KEY - ENTER
+        if(event.key.keysym.sym == SDLK_ESCAPE) {
+            #ifdef DEBUG
+                std::cout << "......KEY ESC PRESSED: value " << keyEsc << std::endl;
+            #endif
+            if (keyEsc.compare("NULL") == 0) {
+
+            } else if (keyEsc.compare("CLOSE") == 0) {
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    isRunning = false;
+                }
+            } else {
+                if(SDL_GetTicks() - sceneChangeCooldown > 500) {
+                    manager.ClearData();
+                    eventManager.DestroyAllEvents();
+                    LoadScene(std::stoi(keyEsc));
+                    sceneChangeCooldown = SDL_GetTicks();
+                }
+            }       
+        }
     default:
         break;
     }
@@ -380,9 +475,8 @@ void Game::HandleCameraMovement () {
 
     camera.x = camera.x < 0 ? 0 : camera.x;
     camera.y = camera.y < 0 ? 0 : camera.y;
-    camera.x = camera.x > camera.w ? camera.w : camera.x;
-    camera.y = camera.y > camera.h ? camera.h : camera.y;
-
+    camera.x = camera.x > (sceneSize.x - camera.w) ? (sceneSize.x - camera.w) : camera.x;
+    camera.y = camera.y > (sceneSize.y - camera.h) ? (sceneSize.y - camera.h) : camera.y;
     }
 }
 
