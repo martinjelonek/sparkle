@@ -390,7 +390,7 @@ void Game::ProcessInput() {
             }
         }
         //KEY - ESC
-        if(event.key.keysym.sym == SDLK_KP_ENTER) {
+        if(event.key.keysym.sym == SDLK_KP_ENTER || event.key.keysym.sym == SDLK_RETURN) {
             #ifdef DEBUG
                 std::cout << "......KEY ENTER PRESSED: value " << key1 << std::endl;
             #endif

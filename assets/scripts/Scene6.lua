@@ -1,9 +1,9 @@
--- WILDHAMMER INFO
+-- MAP EDITOR
 
 --Variable
 
 --Data
-Scene1 = {
+Scene6 = {
     conf = {
         sceneWidth = 1600,
         sceneHeight = 1280
@@ -17,7 +17,7 @@ Scene1 = {
             --set scene number, CLOSE for close the app or NULL
             keyEsc = "0",
             --set scene number or NULL
-            keyEnter = "2"
+            keyEnter = "NULL"
         }
     },
     assets = {
@@ -33,7 +33,7 @@ Scene1 = {
                 label = {
                     x = 50,
                     y = 50,
-                    text = "wildhammer - info scene",
+                    text = "map editor",
                     fontFamily = "pixeldown39",
                     color = "WHITE_COLOR"
                 }
