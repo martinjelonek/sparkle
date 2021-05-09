@@ -82,7 +82,7 @@ Scene2 = {
             components = {
                 transform = {
                     position = {
-                        x = 192,
+                        x = 96,
                         y = 160
                     },
                     velocity = {

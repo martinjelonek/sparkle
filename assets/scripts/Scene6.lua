@@ -27,15 +27,45 @@ Scene6 = {
     },
     entities = {
         [0] = {
+            name = "title-bg",
+            layer = 4,
+            components = {
+                rectangle = {
+                    x = 0,
+                    y = 0,
+                    w = 1280,
+                    h = 30,
+                    r = 100,
+                    g = 100,
+                    b = 100
+                }
+            }
+        },
+        [1] = {
             name = "title",
             layer = 5,
             components = {
                 label = {
-                    x = 50,
-                    y = 50,
+                    x = 5,
+                    y = 5,
                     text = "map editor",
-                    fontFamily = "pixeldown39",
+                    fontFamily = "pixeldown7",
                     color = "WHITE_COLOR"
+                }
+            }
+        },
+        [2] = {
+            name = "left-banner",
+            layer = 4,
+            components = {
+                rectangle = {
+                    x = 0,
+                    y = 31,
+                    w = 300,
+                    h = 690,
+                    r = 120,
+                    g = 120,
+                    b = 120
                 }
             }
         }

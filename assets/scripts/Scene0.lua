@@ -26,7 +26,7 @@ Scene0 = {
         keyboard = {
             ----navigate between scenes
             --set scene number or NULL
-            key1 = "1",
+            key1 = "2",
             key2 = "6",
             --set scene number, CLOSE for close the app or NULL
             keyEsc = "CLOSE",

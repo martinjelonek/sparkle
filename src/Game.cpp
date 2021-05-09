@@ -9,6 +9,7 @@
 #include "./Components/ColliderComponent.h"
 #include "./Components/TextLabelComponent.h"
 #include "./Components/ProjectileEmitterComponent.h"
+#include "./Components/RectangleComponent.h"
 #include "../lib/glm/glm.hpp"
 #include <iostream>
 
@@ -286,8 +287,21 @@ void Game::LoadScene(int sceneNumber) {
                     fontFamily,
                     color
                 );
-            } 
+            }
 
+            //add rectangle component
+            sol::optional<sol::table> existsRectangleIndexNode = entity["components"]["rectangle"];
+            if (existsRectangleIndexNode != sol::nullopt) {
+                newEntity.AddComponent<RectangleComponent>(
+                    static_cast<int>(entity["components"]["rectangle"]["x"]),
+                    static_cast<int>(entity["components"]["rectangle"]["y"]),
+                    static_cast<int>(entity["components"]["rectangle"]["w"]),
+                    static_cast<int>(entity["components"]["rectangle"]["h"]),
+                    static_cast<int>(entity["components"]["rectangle"]["r"]),
+                    static_cast<int>(entity["components"]["rectangle"]["g"]),
+                    static_cast<int>(entity["components"]["rectangle"]["b"])
+                );
+            }
             //add projectile entity
             sol::optional<sol::table> existsProjectileEmitterIndexNode = entity["components"]["projectileEmitter"];
             if (existsProjectileEmitterIndexNode != sol::nullopt) {
