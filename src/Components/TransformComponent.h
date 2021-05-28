@@ -15,9 +15,9 @@ class TransformComponent: public Component {
         vec2 velocity;
         int width;
         int height;
-        int scale;
+        float scale;
 
-        TransformComponent(int posX, int posY, int velX, int velY, int w, int h, int s) {
+        TransformComponent(int posX, int posY, int velX, int velY, int w, int h, float s) {
             position = vec2(posX, posY);
             velocity = vec2(velX, velY);
             width = w;

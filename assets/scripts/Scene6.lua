@@ -24,7 +24,9 @@ Scene6 = {
         [0] = { type="font", id = "pixeldown7", file = "./assets/fonts/pixeldown.ttf", fontSize = 7},
         [1] = { type="font", id = "pixeldown19", file = "./assets/fonts/pixeldown.ttf", fontSize = 19},
         [2] = { type="font", id = "pixeldown39", file = "./assets/fonts/pixeldown.ttf", fontSize = 39},
-        [3] = { type="texture", id = "terrain-fields", file = "./assets/tilemaps/fields.png"}
+        [3] = { type="texture", id = "terrain-fields", file = "./assets/tilemaps/fields.png"},
+        [4] = { type="texture", id = "key-plus", file = "./assets/images/key-plus.png"},
+        [5] = { type="texture", id = "key-minus", file = "./assets/images/key-minus.png"}
     },
     entities = {
         [0] = {
@@ -117,7 +119,7 @@ Scene6 = {
                 sprite = {
                     textureAssetId = "terrain-fields",
                     animated = false,
-                    fixed = false
+                    fixed = true
                 }
             }
         },
@@ -183,6 +185,119 @@ Scene6 = {
                     text = "Enter - save map",
                     fontFamily = "pixeldown7",
                     color = "ORANGE_COLOR"
+                }
+            }
+        },
+        [11] = {
+            name = "map-editor",
+            layer = 3,
+            components = {
+                mapeditor = {
+                    labelNameX = "map-size-text-x",
+                    labelNameY = "map-size-text-y",
+                    mapSizeX = 20,
+                    mapSizeY = 20,
+                    fontFamily = "pixeldown7"
+                }
+            }
+        },
+        [12] = {
+            name = "key-plus-x",
+            layer = 3,
+            components = {
+                transform = {
+                    position = {
+                        x = 150,
+                        y = 38
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0
+                    },
+                    width = 32,
+                    height = 32,
+                    scale = 0.5,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "key-plus",
+                    animated = false,
+                    fixed = true
+                }
+            }
+        },
+        [13] = {
+            name = "key-minus-x",
+            layer = 3,
+            components = {
+                transform = {
+                    position = {
+                        x = 168,
+                        y = 38
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0
+                    },
+                    width = 32,
+                    height = 32,
+                    scale = 0.5,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "key-minus",
+                    animated = false,
+                    fixed = true
+                }
+            }
+        },
+        [14] = {
+            name = "key-plus-y",
+            layer = 3,
+            components = {
+                transform = {
+                    position = {
+                        x = 150,
+                        y = 68
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0
+                    },
+                    width = 32,
+                    height = 32,
+                    scale = 0.5,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "key-plus",
+                    animated = false,
+                    fixed = true
+                }
+            }
+        },
+        [15] = {
+            name = "key-minus-y",
+            layer = 3,
+            components = {
+                transform = {
+                    position = {
+                        x = 168,
+                        y = 68
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0
+                    },
+                    width = 32,
+                    height = 32,
+                    scale = 0.5,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "key-minus",
+                    animated = false,
+                    fixed = true
                 }
             }
         }

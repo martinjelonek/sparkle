@@ -10,6 +10,7 @@
 #include "./Components/TextLabelComponent.h"
 #include "./Components/ProjectileEmitterComponent.h"
 #include "./Components/RectangleComponent.h"
+#include "./Components/MapEditorComponent.h"
 #include "../lib/glm/glm.hpp"
 #include <iostream>
 
@@ -226,7 +227,7 @@ void Game::LoadScene(int sceneNumber) {
                     static_cast<int>(entity["components"]["transform"]["velocity"]["y"]),
                     static_cast<int>(entity["components"]["transform"]["width"]),
                     static_cast<int>(entity["components"]["transform"]["height"]),
-                    static_cast<int>(entity["components"]["transform"]["scale"])
+                    static_cast<float>(entity["components"]["transform"]["scale"])
                 );
             }
             //add sprite component
@@ -345,6 +346,21 @@ void Game::LoadScene(int sceneNumber) {
                     static_cast<bool>(entity["components"]["projectileEmitter"]["loop"]),
                     newEntity.GetComponent<TransformComponent>()
                 );
+            }
+            //add map editor component set
+            sol::optional<sol::table> existsMapEditorIndexNode = entity["components"]["mapeditor"];
+            if (existsMapEditorIndexNode != sol::nullopt) {
+                std::string labelNameX = entity["components"]["mapeditor"]["labelNameX"];
+                std::string labelNameY = entity["components"]["mapeditor"]["labelNameY"];
+                std::string fontFamily = entity["components"]["mapeditor"]["fontFamily"];
+                newEntity.AddComponent<MapEditorComponent>(
+                    &manager,
+                    labelNameX,
+                    labelNameY,
+                    static_cast<int>(entity["components"]["mapeditor"]["mapSizeX"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapSizeY"]),
+                    fontFamily
+                );                
             }
 
             #ifdef DEBUG
