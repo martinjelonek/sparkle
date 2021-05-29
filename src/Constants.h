@@ -36,6 +36,12 @@ const unsigned int NUM_LAYERS = 6;
 //PLAYER
 const int PLAYER_SPEED = 100;
 
+//MAP EDITOR
+const unsigned int MIN_TILES_X = 20;
+const unsigned int MAX_TILES_X = 100;
+const unsigned int MIN_TILES_Y = 20;
+const unsigned int MAX_TILES_Y = 100;
+
 //SETTINGS (DEBUG ONLY)
 #ifdef DEBUG
     const bool SHOW_COLLIDER_BOX = false;

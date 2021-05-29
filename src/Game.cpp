@@ -456,6 +456,7 @@ void Game::ProcessInput() {
     default:
         break;
     }
+    manager.ProcessInput(event);
 }
 
 void Game::Update() {
