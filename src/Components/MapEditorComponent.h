@@ -164,6 +164,19 @@ class MapEditorComponent: public Component {
                         CheckClickArea(event.button.x, event.button.y);
                         clickCooldown = SDL_GetTicks();
                     }
+                }           
+            } else if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_w) {
+                    Game::camera.y += 10;
+                } else if (event.key.keysym.sym == SDLK_s) { 
+                    Game::camera.y -= 10;
+                } else if (event.key.keysym.sym == SDLK_a) {
+                    Game::camera.x += 10;
+                } else if (event.key.keysym.sym == SDLK_d) {
+                    Game::camera.x -= 10;
+                } else if (event.key.keysym.sym == SDLK_SPACE) {
+                    Game::camera.x = mapDefaultPosition.x;
+                    Game::camera.y = mapDefaultPosition.y;
                 }
             }
         }
