@@ -14,8 +14,9 @@ class TileComponent: public Component {
     SDL_Rect sourceRectangle;
     SDL_Rect destinationRectangle;
     vec2 position;
+    bool visibility;
 
-    TileComponent(int sourceRectX, int sourceRectY, int x, int y, int tileSize, int tileScale, std::string assetTextureId) {
+    TileComponent(int sourceRectX, int sourceRectY, int x, int y, int tileSize, int tileScale, std::string assetTextureId, bool visibility) {
         texture = Game::assetManager->GetTexture(assetTextureId);
 
         sourceRectangle.x = sourceRectX;
@@ -30,6 +31,8 @@ class TileComponent: public Component {
 
         position.x = x;
         position.y = y;
+
+        this->visibility = visibility;
     }
 
     ~TileComponent() {
@@ -42,7 +45,18 @@ class TileComponent: public Component {
     }
 
     void Render () override {
-        TextureManager::Draw(texture, sourceRectangle, destinationRectangle, SDL_FLIP_NONE);
+        if (visibility) {
+            TextureManager::Draw(texture, sourceRectangle, destinationRectangle, SDL_FLIP_NONE);
+        }
+    }
+
+    void SetSourceRectanglePosition (int x, int y) {
+        this->sourceRectangle.x = x;
+        this->sourceRectangle.y = y;
+    }
+
+    void SetVisibility (bool visibility) {
+        this->visibility = visibility;
     }
 };
 

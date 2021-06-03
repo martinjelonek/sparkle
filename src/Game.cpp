@@ -9,6 +9,8 @@
 #include "./Components/ColliderComponent.h"
 #include "./Components/TextLabelComponent.h"
 #include "./Components/ProjectileEmitterComponent.h"
+#include "./Components/RectangleComponent.h"
+#include "./Components/MapEditorComponent.h"
 #include "../lib/glm/glm.hpp"
 #include <iostream>
 
@@ -16,12 +18,12 @@ using namespace glm;
 
 EntityManager manager;
 EventManager eventManager;
-AssetManager* Game::assetManager = new AssetManager(&manager);
-SDL_Renderer* Game::renderer;
+AssetManager *Game::assetManager = new AssetManager(&manager);
+SDL_Renderer *Game::renderer;
 SDL_Event Game::event;
 SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-Entity* player = NULL;
-Map* map;
+Entity *player = NULL;
+Map *map;
 
 Game::Game() {
     this->isRunning = false;
@@ -75,6 +77,8 @@ void Game::LoadScene(int sceneNumber) {
         std::cout << "......GAME.CPP::LOADSCENE" << sceneNumber << "-BEGIN" << std::endl;
         std::cout << ".........SOL-PREPARATION-BEGIN" << std::endl;
     #endif
+    //Camera reset
+    Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
     //Lua preparation
     sol::state lua;
     lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
@@ -225,7 +229,7 @@ void Game::LoadScene(int sceneNumber) {
                     static_cast<int>(entity["components"]["transform"]["velocity"]["y"]),
                     static_cast<int>(entity["components"]["transform"]["width"]),
                     static_cast<int>(entity["components"]["transform"]["height"]),
-                    static_cast<int>(entity["components"]["transform"]["scale"])
+                    static_cast<float>(entity["components"]["transform"]["scale"])
                 );
             }
             //add sprite component
@@ -247,7 +251,8 @@ void Game::LoadScene(int sceneNumber) {
 
                     newEntity.AddComponent<SpriteComponent>(
                         textureAssetId,
-                        isAnimated
+                        isAnimated,
+                        static_cast<bool>(entity["components"]["sprite"]["fixed"])
                     );
                 }
             }
@@ -286,8 +291,21 @@ void Game::LoadScene(int sceneNumber) {
                     fontFamily,
                     color
                 );
-            } 
+            }
 
+            //add rectangle component
+            sol::optional<sol::table> existsRectangleIndexNode = entity["components"]["rectangle"];
+            if (existsRectangleIndexNode != sol::nullopt) {
+                newEntity.AddComponent<RectangleComponent>(
+                    static_cast<int>(entity["components"]["rectangle"]["x"]),
+                    static_cast<int>(entity["components"]["rectangle"]["y"]),
+                    static_cast<int>(entity["components"]["rectangle"]["w"]),
+                    static_cast<int>(entity["components"]["rectangle"]["h"]),
+                    static_cast<int>(entity["components"]["rectangle"]["r"]),
+                    static_cast<int>(entity["components"]["rectangle"]["g"]),
+                    static_cast<int>(entity["components"]["rectangle"]["b"])
+                );
+            }
             //add projectile entity
             sol::optional<sol::table> existsProjectileEmitterIndexNode = entity["components"]["projectileEmitter"];
             if (existsProjectileEmitterIndexNode != sol::nullopt) {
@@ -331,6 +349,27 @@ void Game::LoadScene(int sceneNumber) {
                     static_cast<bool>(entity["components"]["projectileEmitter"]["loop"]),
                     newEntity.GetComponent<TransformComponent>()
                 );
+            }
+            //add map editor component set
+            sol::optional<sol::table> existsMapEditorIndexNode = entity["components"]["mapeditor"];
+            if (existsMapEditorIndexNode != sol::nullopt) {
+                std::string labelNameX = entity["components"]["mapeditor"]["labelNameX"];
+                std::string labelNameY = entity["components"]["mapeditor"]["labelNameY"];
+                std::string fontFamily = entity["components"]["mapeditor"]["fontFamily"];
+                std::string mapTextureId = entity["components"]["mapeditor"]["mapTextureId"];
+                newEntity.AddComponent<MapEditorComponent>(
+                    &manager,
+                    labelNameX,
+                    labelNameY,
+                    static_cast<int>(entity["components"]["mapeditor"]["mapSizeX"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapSizeY"]),
+                    fontFamily,
+                    mapTextureId,
+                    static_cast<int>(entity["components"]["mapeditor"]["mapScale"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapTileSize"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionX"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionY"])
+                );                
             }
 
             #ifdef DEBUG
@@ -426,6 +465,7 @@ void Game::ProcessInput() {
     default:
         break;
     }
+    manager.ProcessInput(event);
 }
 
 void Game::Update() {

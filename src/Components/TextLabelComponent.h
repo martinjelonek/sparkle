@@ -50,6 +50,8 @@ class TextLabelComponent: public Component {
                 return WHITE_COLOR;
             } else if (colorName.compare("GREEN_COLOR") == 0) {
                 return GREEN_COLOR;
+            } else if(colorName.compare("ORANGE_COLOR") == 0) {
+                return ORANGE_COLOR;
             } else {
                 return WHITE_COLOR;
                 #ifdef DEBUG

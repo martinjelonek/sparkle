@@ -4,6 +4,7 @@
 #include "./Component.h"
 #include "./EntityManager.h"
 #include "./Constants.h"
+#include <SDL2/SDL.h>
 #include <map>
 #include <vector>
 #include <string>
@@ -22,6 +23,7 @@ class Entity {
         LayerType layer;
         Entity(EntityManager& manager);
         Entity(EntityManager& manager, std::string name, LayerType layer);
+        void ProcessInput(SDL_Event& event);
         void Update(float deltaTime);
         void Render();
         void Destroy();

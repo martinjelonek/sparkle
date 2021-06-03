@@ -15,6 +15,7 @@ class EntityManager {
         void DestroyInactiveEntities();
     public:
         void ClearData();
+        void ProcessInput(SDL_Event& event);
         void Update(float deltaTime);
         void Render();
         bool HasNoEntities() const;

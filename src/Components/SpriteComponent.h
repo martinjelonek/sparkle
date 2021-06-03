@@ -20,7 +20,6 @@ class SpriteComponent: public Component {
         std::map<std::string, Animation> animations;
         std::string currentAnimationName;
         unsigned int animationIndex = 0;
-
     public:
         SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
@@ -30,6 +29,15 @@ class SpriteComponent: public Component {
             #endif
             this->isAnimated = isAnimated;
             this->isFixed = false;
+            SetTexture(id);
+        }
+        
+        SpriteComponent(std::string id, bool isAnimated, bool isFixed) {
+            #ifdef DEBUG
+                std::cout << "...............ADDED-SPRITECOMPONENT: " << "id = " << id << ", isAnimated = " << isAnimated << ", isFixed = " << isFixed << std::endl;
+            #endif
+            this->isAnimated = isAnimated;
+            this->isFixed = isFixed;
             SetTexture(id);
         }
 
@@ -95,8 +103,8 @@ class SpriteComponent: public Component {
             sourceRectangle.y = animationIndex * transform->height;
             destinationRectangle.x = static_cast<int>(transform->position.x) - (isFixed ? 0 : Game::camera.x);
             destinationRectangle.y = static_cast<int>(transform->position.y) - (isFixed ? 0 : Game::camera.y);
-            destinationRectangle.w = transform->width * transform->scale;
-            destinationRectangle.h = transform->height * transform->scale;
+            destinationRectangle.w = static_cast<int>(transform->width * transform->scale);
+            destinationRectangle.h = static_cast<int>(transform->height * transform->scale);
         }
 
         void Render() override {

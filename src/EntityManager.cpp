@@ -10,11 +10,17 @@ void EntityManager::ClearData() {
     }
 }
 
+void EntityManager::ProcessInput (SDL_Event& event) {
+    for (auto& entitiy: entities) {
+        entitiy->ProcessInput(event);
+    }
+    DestroyInactiveEntities();
+}
+
 void EntityManager::Update(float deltaTime) {
     for (auto& entitiy: entities) {
         entitiy->Update(deltaTime);
     }
-    DestroyInactiveEntities();
 }
 
 void EntityManager::DestroyInactiveEntities() {

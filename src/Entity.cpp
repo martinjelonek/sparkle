@@ -9,15 +9,19 @@ Entity::Entity(EntityManager& manager, std::string name, LayerType layer): manag
     this->isActive = true;
 }
 
+void Entity::ProcessInput(SDL_Event& event) {
+    for (auto& component: components) {
+        component->ProcessInput(event);
+    }
+}
+
 void Entity::Update(float deltaTime) {
-    //loop vector of components
     for (auto& component: components) {
         component->Update(deltaTime);
     }
 }
 
 void Entity::Render() {
-    //loop vector of components
     for (auto& component: components){
         component->Render();
     }

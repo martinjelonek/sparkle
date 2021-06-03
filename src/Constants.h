@@ -20,6 +20,7 @@ enum EventType {
 //COLORS
 const SDL_Color WHITE_COLOR = {255, 255, 255, 255};
 const SDL_Color GREEN_COLOR = {0, 255, 0, 255};
+const SDL_Color ORANGE_COLOR = {235, 186, 52};
 
 //LAYERS
 enum LayerType {
@@ -34,6 +35,12 @@ const unsigned int NUM_LAYERS = 6;
 
 //PLAYER
 const int PLAYER_SPEED = 100;
+
+//MAP EDITOR
+const unsigned int MIN_TILES_X = 20;
+const unsigned int MAX_TILES_X = 100;
+const unsigned int MIN_TILES_Y = 20;
+const unsigned int MAX_TILES_Y = 100;
 
 //SETTINGS (DEBUG ONLY)
 #ifdef DEBUG
