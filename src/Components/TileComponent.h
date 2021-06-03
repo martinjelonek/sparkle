@@ -16,7 +16,7 @@ class TileComponent: public Component {
     vec2 position;
     bool visibility;
 
-    TileComponent(int sourceRectX, int sourceRectY, int x, int y, int tileSize, int tileScale, std::string assetTextureId) {
+    TileComponent(int sourceRectX, int sourceRectY, int x, int y, int tileSize, int tileScale, std::string assetTextureId, bool visibility) {
         texture = Game::assetManager->GetTexture(assetTextureId);
 
         sourceRectangle.x = sourceRectX;
@@ -32,7 +32,7 @@ class TileComponent: public Component {
         position.x = x;
         position.y = y;
 
-        visibility = true;
+        this->visibility = visibility;
     }
 
     ~TileComponent() {

@@ -13,9 +13,9 @@ class Map {
         Map(std::string textureId, int scale, int tileSize);
         ~Map();
         void LoadMap(std::string filePath, int mapSizeX, int mapSizeY);
-        void LoadMap(std::string mapTable[MAX_TILES_X][MAX_TILES_Y]);
+        void LoadMap(std::string mapTable[MAX_TILES_X][MAX_TILES_Y], int visibilityOffX, int visibilityOffY);
         void AddTile(int sourceX, int sourceY, int x, int y);
-        void AddTile(std::string tileName, int sourceX, int sourceY, int x, int y);
+        void AddTile(std::string tileName, int sourceX, int sourceY, int x, int y, bool visibility);
 };
 
 #endif

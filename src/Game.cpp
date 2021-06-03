@@ -77,6 +77,8 @@ void Game::LoadScene(int sceneNumber) {
         std::cout << "......GAME.CPP::LOADSCENE" << sceneNumber << "-BEGIN" << std::endl;
         std::cout << ".........SOL-PREPARATION-BEGIN" << std::endl;
     #endif
+    //Camera reset
+    Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
     //Lua preparation
     sol::state lua;
     lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);

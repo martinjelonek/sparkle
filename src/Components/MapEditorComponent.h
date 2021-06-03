@@ -8,6 +8,7 @@
 #include "../Constants.h"
 #include "../Map.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "../../lib/glm/glm.hpp"
 #include <SDL2/SDL.h>
@@ -59,17 +60,48 @@ class MapEditorComponent: public Component {
         void CheckClickArea (int& mouseX, int& mouseY) {
             if(((unsigned)(mouseX - keyPlusX.x) <= (keyPlusX.w))&&((unsigned)(mouseY - keyPlusX.y) <= (keyPlusX.h)) ) {
                 //button plus for x
-                if (mapSizeX < MAX_TILES_X) mapSizeX++;
-
+                if (mapSizeX < MAX_TILES_X) {
+                    mapSizeX++;
+                    std::string tileName = "TileX" + std::to_string(mapSizeX - 1) + "Y";
+                    for (int y = 0; y < mapSizeY; y++) {
+                        entity = manager->GetEntitiesByName(tileName + std::to_string(y));
+                        tile = entity->GetComponent<TileComponent>();
+                        tile->SetVisibility(true);
+                    }
+                }
             } else if(((unsigned)(mouseX - keyMinusX.x) <= (keyMinusX.w))&&((unsigned)(mouseY - keyMinusX.y) <= (keyMinusX.h)) ) {
                 //button minus for x
-                if (mapSizeX > MIN_TILES_X) mapSizeX--;
+                if (mapSizeX > MIN_TILES_X) {
+                    std::string tileName = "TileX" + std::to_string(mapSizeX - 1) + "Y";
+                    mapSizeX--;
+                    for (int y = 0; y < mapSizeY; y++) {
+                        entity = manager->GetEntitiesByName(tileName + std::to_string(y));
+                        tile = entity->GetComponent<TileComponent>();
+                        tile->SetVisibility(false);
+                    }
+                }
             } else if(((unsigned)(mouseX - keyPlusY.x) <= (keyPlusY.w))&&((unsigned)(mouseY - keyPlusY.y) <= (keyPlusY.h)) ) {
                 //button plus for y
-                if (mapSizeY < MAX_TILES_Y) mapSizeY++;
+                if (mapSizeY < MAX_TILES_Y) {
+                    mapSizeY++;
+                    std::string tileName = "Y" + std::to_string(mapSizeY - 1);
+                    for (int x = 0; x < mapSizeX; x++) {
+                        entity = manager->GetEntitiesByName("TileX" + std::to_string(x) + tileName);
+                        tile = entity->GetComponent<TileComponent>();
+                        tile->SetVisibility(true);
+                    }
+                }
             } else if(((unsigned)(mouseX - keyMinusY.x) <= (keyMinusY.w))&&((unsigned)(mouseY - keyMinusY.y) <= (keyMinusY.h)) ) {
                 //button minus for y
-                if (mapSizeY > MIN_TILES_Y) mapSizeY--;            
+                if (mapSizeY > MIN_TILES_Y) {
+                    std::string tileName = "Y" + std::to_string(mapSizeY - 1);
+                    mapSizeY--;
+                    for (int x = 0; x < mapSizeX; x++) {
+                        entity = manager->GetEntitiesByName("TileX" + std::to_string(x) + tileName);
+                        tile = entity->GetComponent<TileComponent>();
+                        tile->SetVisibility(false);
+                    }
+                }          
             } else if (((unsigned)(mouseX - tilemap.x) <= (tilemap.w))&&((unsigned)(mouseY - tilemap.y) <= (tilemap.h)) ) {
                 //tilemap area
                 //calculate x value
@@ -94,25 +126,21 @@ class MapEditorComponent: public Component {
             }
         }
 
-        //TODO: optimalize this! it's not necessary to loop for all values each time
-        /// <param name="turnOffX">Starting x value for tiles not to render (above x).</param>
-        /// <param name="turnOffY">Starting y value for tiles not to render (above y).</param>
-        void SetTilesVisibility (int turnOffX, int turnOffY) {
-            std::string tileName;
-            if (turnOffX > MAX_TILES_X) turnOffX = MAX_TILES_X;
-            if (turnOffY > MAX_TILES_Y) turnOffY = MAX_TILES_Y;
-            for (int x = 0; x < MAX_TILES_X; x++) {
-                for (int y = 0; y < MAX_TILES_Y; y++) {
-                    tileName = "TileX" + std::to_string(x) + "Y" + std::to_string(y);
-                    entity = manager->GetEntitiesByName(tileName);
-                    tile = entity->GetComponent<TileComponent>();
-                    if ((turnOffX > x)&&(turnOffY > y)) {
-                        tile->SetVisibility(true);                    
-                    } else {
-                        tile->SetVisibility(false);
-                    }
+        void SaveMapFile () {
+            std::string fileName = "new-map-" + std::to_string(mapSizeX) + "x-" + std::to_string(mapSizeY) + "y.map";
+            std::string filePath = "./assets/tilemaps/";
+            std::string fileContent = "";
+            for (int x = 0; x < mapSizeX; x++) {
+                for (int y = 0; y < mapSizeY; y++) {
+                    fileContent += mapGrid[x][y];
                 }
             }
+            std::ofstream out(filePath + fileName);
+            out << fileContent;
+            out.close();
+            #ifdef DEBUG
+                std::cout << "...............FILE-SAVED: " << fileName << std::endl;
+            #endif
         }
 
     public:
@@ -130,7 +158,7 @@ class MapEditorComponent: public Component {
             this->fontFamily = fontFamily;
             this->mapDefaultPosition.x = mapDefaultPositionX;
             this->mapDefaultPosition.y = mapDefaultPositionY;
-
+            
             //set all values to "00"
             for (int i = 0; i < MAX_TILES_X; i++) {
                 for (int j = 0; j < MAX_TILES_Y; j++) {
@@ -140,10 +168,7 @@ class MapEditorComponent: public Component {
 
             //add map
             map = new Map (mapTextureId, mapScale, mapTileSize);
-            map->LoadMap(mapGrid);
-
-            //set tiles visibility
-            SetTilesVisibility(mapSizeX, mapSizeY);
+            map->LoadMap(mapGrid, mapSizeX, mapSizeY);
 
             // set default map position
             Game::camera.x = mapDefaultPosition.x;
@@ -177,6 +202,8 @@ class MapEditorComponent: public Component {
                 } else if (event.key.keysym.sym == SDLK_SPACE) {
                     Game::camera.x = mapDefaultPosition.x;
                     Game::camera.y = mapDefaultPosition.y;
+                } else if (event.key.keysym.sym == SDLK_q) {
+                    SaveMapFile();
                 }
             }
         }

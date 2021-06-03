@@ -137,58 +137,45 @@ Scene6 = {
             }
         },
         [7] = {
-            name = "info-row-2",
-            layer = 3,
-            components = {
-                label = {
-                    x = 5,
-                    y = 250,
-                    text = "RMB - set first tile",
-                    fontFamily = "pixeldown7",
-                    color = "ORANGE_COLOR"
-                }
-            }
-        },
-        [8] = {
             name = "info-row-3",
             layer = 3,
             components = {
                 label = {
                     x = 5,
-                    y = 280,
+                    y = 250,
                     text = "W, S, A, D - move view",
                     fontFamily = "pixeldown7",
                     color = "ORANGE_COLOR"
                 }
             }
         },
-        [9] = {
+        [8] = {
             name = "info-row-4",
             layer = 3,
             components = {
                 label = {
                     x = 5,
-                    y = 310,
+                    y = 280,
                     text = "Esc - back to menu",
                     fontFamily = "pixeldown7",
                     color = "ORANGE_COLOR"
                 }
             }
         },
-        [10] = {
+        [9] = {
             name = "info-row-5",
             layer = 3,
             components = {
                 label = {
                     x = 5,
-                    y = 340,
-                    text = "Enter - save map",
+                    y = 310,
+                    text = "Q - save map",
                     fontFamily = "pixeldown7",
                     color = "ORANGE_COLOR"
                 }
             }
         },
-        [11] = {
+        [10] = {
             name = "map-editor",
             layer = 3,
             components = {
@@ -206,7 +193,7 @@ Scene6 = {
                 }
             }
         },
-        [12] = {
+        [11] = {
             name = "key-plus-x",
             layer = 3,
             components = {
@@ -231,7 +218,7 @@ Scene6 = {
                 }
             }
         },
-        [13] = {
+        [12] = {
             name = "key-minus-x",
             layer = 3,
             components = {
@@ -256,7 +243,7 @@ Scene6 = {
                 }
             }
         },
-        [14] = {
+        [13] = {
             name = "key-plus-y",
             layer = 3,
             components = {
@@ -281,7 +268,7 @@ Scene6 = {
                 }
             }
         },
-        [15] = {
+        [14] = {
             name = "key-minus-y",
             layer = 3,
             components = {
@@ -306,7 +293,7 @@ Scene6 = {
                 }
             }
         },
-        [16] = {
+        [15] = {
             name = "line-bg",
             layer = 1,
             components = {
