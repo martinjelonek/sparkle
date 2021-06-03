@@ -65,7 +65,7 @@ Scene0 = {
                 sprite = {
                     textureAssetId = "logo",
                     animated = false,
-                    fixed = false
+                    fixed = true
                 }
            }
         },
@@ -116,7 +116,7 @@ Scene0 = {
                 sprite = {
                     textureAssetId = "key-1",
                     animated = false,
-                    fixed = false
+                    fixed = true
                 }
            }
         },
@@ -154,7 +154,7 @@ Scene0 = {
                 sprite = {
                     textureAssetId = "key-2",
                     animated = false,
-                    fixed = false
+                    fixed = true
                 }
            }
         },
@@ -192,7 +192,7 @@ Scene0 = {
                 sprite = {
                     textureAssetId = "key-esc",
                     animated = false,
-                    fixed = false
+                    fixed = true
                 }
            }
         },

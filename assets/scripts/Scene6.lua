@@ -197,7 +197,12 @@ Scene6 = {
                     labelNameY = "map-size-text-y",
                     mapSizeX = 20,
                     mapSizeY = 20,
-                    fontFamily = "pixeldown7"
+                    fontFamily = "pixeldown7",
+                    mapTextureId = "terrain-fields",
+                    mapScale = 1,
+                    mapTileSize = 32,
+                    mapDefaultPositionX = -331,
+                    mapDefaultPositionY = -31,
                 }
             }
         },
@@ -298,6 +303,21 @@ Scene6 = {
                     textureAssetId = "key-minus",
                     animated = false,
                     fixed = true
+                }
+            }
+        },
+        [16] = {
+            name = "line-bg",
+            layer = 1,
+            components = {
+                rectangle = {
+                    x = 0,
+                    y = 30,
+                    w = 330,
+                    h = 1,
+                    r = 0,
+                    g = 0,
+                    b = 0
                 }
             }
         }

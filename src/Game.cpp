@@ -18,12 +18,12 @@ using namespace glm;
 
 EntityManager manager;
 EventManager eventManager;
-AssetManager* Game::assetManager = new AssetManager(&manager);
-SDL_Renderer* Game::renderer;
+AssetManager *Game::assetManager = new AssetManager(&manager);
+SDL_Renderer *Game::renderer;
 SDL_Event Game::event;
 SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-Entity* player = NULL;
-Map* map;
+Entity *player = NULL;
+Map *map;
 
 Game::Game() {
     this->isRunning = false;
@@ -249,7 +249,8 @@ void Game::LoadScene(int sceneNumber) {
 
                     newEntity.AddComponent<SpriteComponent>(
                         textureAssetId,
-                        isAnimated
+                        isAnimated,
+                        static_cast<bool>(entity["components"]["sprite"]["fixed"])
                     );
                 }
             }
@@ -353,13 +354,19 @@ void Game::LoadScene(int sceneNumber) {
                 std::string labelNameX = entity["components"]["mapeditor"]["labelNameX"];
                 std::string labelNameY = entity["components"]["mapeditor"]["labelNameY"];
                 std::string fontFamily = entity["components"]["mapeditor"]["fontFamily"];
+                std::string mapTextureId = entity["components"]["mapeditor"]["mapTextureId"];
                 newEntity.AddComponent<MapEditorComponent>(
                     &manager,
                     labelNameX,
                     labelNameY,
                     static_cast<int>(entity["components"]["mapeditor"]["mapSizeX"]),
                     static_cast<int>(entity["components"]["mapeditor"]["mapSizeY"]),
-                    fontFamily
+                    fontFamily,
+                    mapTextureId,
+                    static_cast<int>(entity["components"]["mapeditor"]["mapScale"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapTileSize"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionX"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionY"])
                 );                
             }
 

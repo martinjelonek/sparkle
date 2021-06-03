@@ -31,6 +31,15 @@ class SpriteComponent: public Component {
             this->isFixed = false;
             SetTexture(id);
         }
+        
+        SpriteComponent(std::string id, bool isAnimated, bool isFixed) {
+            #ifdef DEBUG
+                std::cout << "...............ADDED-SPRITECOMPONENT: " << "id = " << id << ", isAnimated = " << isAnimated << ", isFixed = " << isFixed << std::endl;
+            #endif
+            this->isAnimated = isAnimated;
+            this->isFixed = isFixed;
+            SetTexture(id);
+        }
 
         SpriteComponent(std::string id, unsigned int numFrames, unsigned int animationSpeed, bool hasDirections, bool isFixed) {
             this->isAnimated = true;
