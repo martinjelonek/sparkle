@@ -29,11 +29,11 @@ Scene2 = {
     },
     map = {
         textureAssetId = "terrain-fields",
-        file = "./assets/tilemaps/fields.map",
+        file = "./assets/tilemaps/level1.map",
         scale = 2,
         tileSize = 32,
-        mapSizeX = 25,
-        mapSizeY = 20
+        mapSizeX = 20,
+        mapSizeY = 40
     },
     entities = {
         [0] = {

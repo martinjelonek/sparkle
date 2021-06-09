@@ -52,7 +52,13 @@ class MapEditorComponent: public Component {
         // *******
         std::string mapGrid[MAX_TILES_X][MAX_TILES_Y];
         Map *map;
+        std::string mapTextureId;
+        int mapScale;
+        int mapTileSize;
         vec2 mapDefaultPosition;
+        std::string mapToLoadName;
+        int mapToLoadSizeX;
+        int mapToLoadSizeY;
         
         // *******************
         // * private methods *
@@ -121,7 +127,7 @@ class MapEditorComponent: public Component {
                     tile = entity->GetComponent<TileComponent>();
                     tile->SetSourceRectanglePosition(selectedTilemap.x - 5, selectedTilemap.y - 90);
                     //set code in mapGrid
-                    mapGrid[mapRow][mapCol] = std::to_string(selectedTilemap.x - 5) + std::to_string(selectedTilemap.y - 90);
+                    mapGrid[mapRow][mapCol] = std::to_string((selectedTilemap.x - 5) / 32) + std::to_string((selectedTilemap.y - 90) / 32);
                 }    
             }
         }
@@ -135,6 +141,7 @@ class MapEditorComponent: public Component {
                     fileContent += mapGrid[x][y];
                 }
             }
+            if(remove((filePath + fileName).c_str()) != 0);
             std::ofstream out(filePath + fileName);
             out << fileContent;
             out.close();
@@ -143,10 +150,59 @@ class MapEditorComponent: public Component {
             #endif
         }
 
+        void LoadMapFile () {
+            if (mapToLoadName.length() > 0) {
+                std::string filePath = "./assets/tilemaps/";
+                std::fstream mapFile;
+                std::string tileName;
+                
+                //set default map grid values
+                for (int x = 0; x < MAX_TILES_X; x++) {
+                    for (int y = 0; y < MAX_TILES_Y; y++) {
+                        mapGrid[x][y] = "00";
+                    }
+                }
+                
+                //load file and set new map grid values
+                mapFile.open(filePath + mapToLoadName);
+                std::string tilePos;
+                for(int x = 0; x < mapToLoadSizeX; x++) {
+                    for (int y = 0; y < mapToLoadSizeY; y++) {
+                        char ch;
+                        tilePos = "";
+                        mapFile.get(ch);
+                        tilePos += ch;
+                        mapFile.get(ch);
+                        tilePos += ch;
+                        mapGrid[x][y] = tilePos;
+                    }
+                }
+                mapFile.close();
+
+                //update map tiles
+                char cx;
+                char cy;
+                for(int x = 0; x < mapToLoadSizeX; x++) {
+                    for (int y = 0; y < mapToLoadSizeY; y++) {
+                        tileName = "TileX" + std::to_string(x) + "Y" + std::to_string(y);
+                        entity = manager->GetEntitiesByName(tileName);
+                        tile = entity->GetComponent<TileComponent>();
+                        cx = mapGrid[x][y][0];
+                        cy = mapGrid[x][y][1];
+                        tile->SetSourceRectanglePosition(((int)cx - 48) * 32, ((int)cy - 48) * 32);
+                    }
+                }
+
+                #ifdef DEBUG
+                    std::cout << "...............FILE-LOADED: " << mapToLoadName << std::endl;
+                #endif
+            }            
+        }
+
     public:
         MapEditorComponent (EntityManager *manager, std::string labelNameX, std::string labelNameY, int mapSizeX, int mapSizeY,
                             std::string fontFamily, std::string mapTextureId, int mapScale, int mapTileSize, int mapDefaultPositionX,
-                            int mapDefaultPositionY) {
+                            int mapDefaultPositionY, std::string mapToLoadName, int mapToLoadSizeX, int mapToLoadSizeY) {
             #ifdef DEBUG
                 std::cout << "...............ADDED-MAPEDITORCOMPONENT" << std::endl;
             #endif
@@ -156,8 +212,14 @@ class MapEditorComponent: public Component {
             this->mapSizeX = mapSizeX;
             this->mapSizeY = mapSizeY;
             this->fontFamily = fontFamily;
+            this->mapTextureId = mapTextureId;
+            this->mapScale = mapScale;
+            this->mapTileSize = mapTileSize;
             this->mapDefaultPosition.x = mapDefaultPositionX;
             this->mapDefaultPosition.y = mapDefaultPositionY;
+            this->mapToLoadName = mapToLoadName;
+            this->mapToLoadSizeX = mapToLoadSizeX;
+            this->mapToLoadSizeY = mapToLoadSizeY;
             
             //set all values to "00"
             for (int i = 0; i < MAX_TILES_X; i++) {
@@ -204,6 +266,8 @@ class MapEditorComponent: public Component {
                     Game::camera.y = mapDefaultPosition.y;
                 } else if (event.key.keysym.sym == SDLK_q) {
                     SaveMapFile();
+                } else if (event.key.keysym.sym == SDLK_l) {
+                    LoadMapFile();
                 }
             }
         }

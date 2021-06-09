@@ -357,6 +357,7 @@ void Game::LoadScene(int sceneNumber) {
                 std::string labelNameY = entity["components"]["mapeditor"]["labelNameY"];
                 std::string fontFamily = entity["components"]["mapeditor"]["fontFamily"];
                 std::string mapTextureId = entity["components"]["mapeditor"]["mapTextureId"];
+                std::string mapToLoadName = entity["components"]["mapeditor"]["mapToLoadName"];
                 newEntity.AddComponent<MapEditorComponent>(
                     &manager,
                     labelNameX,
@@ -368,7 +369,10 @@ void Game::LoadScene(int sceneNumber) {
                     static_cast<int>(entity["components"]["mapeditor"]["mapScale"]),
                     static_cast<int>(entity["components"]["mapeditor"]["mapTileSize"]),
                     static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionX"]),
-                    static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionY"])
+                    static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionY"]),
+                    mapToLoadName,
+                    static_cast<int>(entity["components"]["mapeditor"]["mapToLoadSizeX"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapToLoadSizeY"])
                 );                
             }
 

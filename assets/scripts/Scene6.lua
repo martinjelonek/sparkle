@@ -190,6 +190,9 @@ Scene6 = {
                     mapTileSize = 32,
                     mapDefaultPositionX = -331,
                     mapDefaultPositionY = -31,
+                    mapToLoadName = "level0.map",
+                    mapToLoadSizeX = 20,
+                    mapToLoadSizeY = 20
                 }
             }
         },

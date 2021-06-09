@@ -22,10 +22,17 @@ void Map::LoadMap(std::string filePath, int mapSizeX, int mapSizeY) {
         for (int x = 0; x < mapSizeX; x++) {
             char ch;
             mapFile.get(ch);
-            int sourceRectY = atoi(&ch) * tileSize;
-            mapFile.get(ch);
             int sourceRectX = atoi(&ch) * tileSize;
-            AddTile(sourceRectX, sourceRectY, x * (scale * tileSize), y * (scale * tileSize));
+            mapFile.get(ch);
+            int sourceRectY = atoi(&ch) * tileSize;
+            AddTile(sourceRectX, sourceRectY, y * (scale * tileSize), x * (scale * tileSize));
+            #ifdef DEBUG
+                std::cout   << ".........ADD-TILE: sRx = " << sourceRectX
+                            << ", sRy = " << sourceRectX
+                            << ", x = " << x * scale * tileSize
+                            << ", y = " << y * scale * tileSize
+                            << std::endl;
+            #endif
         }
     }
     mapFile.close();
