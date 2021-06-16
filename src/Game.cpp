@@ -11,6 +11,7 @@
 #include "./Components/ProjectileEmitterComponent.h"
 #include "./Components/RectangleComponent.h"
 #include "./Components/MapEditorComponent.h"
+#include "./Components/TriggerWinComponent.h"
 #include "../lib/glm/glm.hpp"
 #include <iostream>
 
@@ -77,8 +78,14 @@ void Game::LoadScene(int sceneNumber) {
         std::cout << "......GAME.CPP::LOADSCENE" << sceneNumber << "-BEGIN" << std::endl;
         std::cout << ".........SOL-PREPARATION-BEGIN" << std::endl;
     #endif
+
+    //Clear scene
+    manager.ClearData();
+    eventManager.DestroyAllEvents();
+
     //Camera reset
     Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+
     //Lua preparation
     sol::state lua;
     lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
@@ -99,6 +106,7 @@ void Game::LoadScene(int sceneNumber) {
     sol::table levelConf = levelData["conf"];
     sceneSize.x = static_cast<int>(levelConf["sceneWidth"]);
     sceneSize.y = static_cast<int>(levelConf["sceneHeight"]);
+    lostSceneNumber = static_cast<int>(levelConf["lostScene"]);
 
     #ifdef DEBUG
         std::cout << ".........SOL-LOADING-CONF-END" << std::endl;
@@ -306,6 +314,17 @@ void Game::LoadScene(int sceneNumber) {
                     static_cast<int>(entity["components"]["rectangle"]["b"])
                 );
             }
+
+            //add trigger win component
+            sol::optional<sol::table> existsTriggerWinIndexNode = entity["components"]["triggerWin"];
+            if (existsTriggerWinIndexNode != sol::nullopt) {
+                newEntity.AddComponent<TriggerWinComponent>(
+                    &eventManager, 
+                    sceneSize.x,
+                    static_cast<int>(entity["components"]["triggerWin"]["sceneToLoad"])
+                );
+            }
+
             //add projectile entity
             sol::optional<sol::table> existsProjectileEmitterIndexNode = entity["components"]["projectileEmitter"];
             if (existsProjectileEmitterIndexNode != sol::nullopt) {
@@ -410,8 +429,6 @@ void Game::ProcessInput() {
             #endif
             if (key1.compare("NULL") != 0) {
                 if(SDL_GetTicks() - sceneChangeCooldown > 500) {
-                    manager.ClearData();
-                    eventManager.DestroyAllEvents();
                     LoadScene(std::stoi(key1));
                     sceneChangeCooldown = SDL_GetTicks();
                 }
@@ -425,8 +442,6 @@ void Game::ProcessInput() {
             #endif
             if (key2.compare("NULL") != 0) {
                 if(SDL_GetTicks() - sceneChangeCooldown > 500) {
-                    manager.ClearData();
-                    eventManager.DestroyAllEvents();
                     LoadScene(std::stoi(key2));
                     sceneChangeCooldown = SDL_GetTicks();
                 }                    
@@ -439,8 +454,6 @@ void Game::ProcessInput() {
             #endif
             if (keyEnter.compare("NULL") != 0) {
                 if(SDL_GetTicks() - sceneChangeCooldown > 500) {
-                    manager.ClearData();
-                    eventManager.DestroyAllEvents();
                     LoadScene(std::stoi(keyEnter));
                     sceneChangeCooldown = SDL_GetTicks();
                 }                
@@ -459,8 +472,6 @@ void Game::ProcessInput() {
                 }
             } else {
                 if(SDL_GetTicks() - sceneChangeCooldown > 500) {
-                    manager.ClearData();
-                    eventManager.DestroyAllEvents();
                     LoadScene(std::stoi(keyEsc));
                     sceneChangeCooldown = SDL_GetTicks();
                 }
@@ -497,7 +508,14 @@ void Game::Update() {
     //events
     CheckCollisions();
     eventManager.HandleEvents();
-    if (eventManager.gameStop) isRunning = false;
+    if (eventManager.gameLost) {
+        eventManager.gameLost = false; //reset
+        LoadScene(eventManager.sceneToLoad);
+    }
+    if (eventManager.gameWin) {
+        eventManager.gameWin = false; //reset
+        LoadScene(eventManager.sceneToLoad);
+    }
 }
 
 void Game::Render() {
@@ -525,7 +543,7 @@ void Game::HandleCameraMovement () {
 }
 
 void Game::CheckCollisions () {
-    if(!manager.HasNoEntities()) manager.CollisionTrigger(eventManager);
+    if(!manager.HasNoEntities()) manager.CollisionTrigger(eventManager, lostSceneNumber);
 }
 
 void Game::Destroy() {

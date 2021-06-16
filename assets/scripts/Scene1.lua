@@ -6,7 +6,8 @@
 Scene1 = {
     conf = {
         sceneWidth = 2560,
-        sceneHeight = 1280
+        sceneHeight = 1280,
+        lostScene = 4
     },
     control = {
         keyboard = {

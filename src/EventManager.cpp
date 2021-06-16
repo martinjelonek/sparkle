@@ -8,8 +8,15 @@ EventManager::~EventManager() {
 
 }
 
-void EventManager::AddCollisionEvent(EventType COLLISION, std::string colliderTagA, std::string colliderTagB) {
-    Event *event = new Event(COLLISION, colliderTagA, colliderTagB);
+void EventManager::AddCollisionEvent(EventType COLLISION, std::string colliderTagA, std::string colliderTagB, int sceneToLoad) {
+    Event *event = new Event(COLLISION, colliderTagA, colliderTagB, sceneToLoad);
+    this->sceneToLoad = sceneToLoad;
+    events.push_back(event);
+}
+
+void EventManager::AddWinEvent(EventType WIN, int sceneToLoad) {
+    Event *event = new Event(WIN, sceneToLoad);
+    this->sceneToLoad = sceneToLoad;
     events.push_back(event);
 }
 
@@ -20,8 +27,14 @@ void EventManager::HandleEvents() {
             || (events[i]->colliderTagA.compare("enemy") == 0 && events[i]->colliderTagB.compare("player") == 0)
             || (events[i]->colliderTagA.compare("player") == 0 && events[i]->colliderTagB.compare("enemy-projectile") == 0)
             || (events[i]->colliderTagA.compare("enemy-projectile") == 0 && events[i]->colliderTagB.compare("player") == 0)) {
-                gameStop = true;    
+                gameLost = true;
+                this->sceneToLoad = events[i]->sceneToLoad;
             }
+            delete events[i];
+            events.erase(events.begin() + i);
+        } else if (events[i]->GetEventType() == WIN) {
+            gameWin = true;
+            this->sceneToLoad = events[i]->sceneToLoad;
             delete events[i];
             events.erase(events.begin() + i);
         } else {

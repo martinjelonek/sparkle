@@ -77,7 +77,7 @@ Entity& EntityManager::AddEntity(std::string entityName, LayerType layer) {
     return *entity;
 }
 
-void EntityManager::CollisionTrigger (EventManager& EventManager) {
+void EntityManager::CollisionTrigger (EventManager& EventManager, int sceneToLoad) {
     for (int i = 0; i < entities.size() - 1; i++) {
         auto& EntityA = entities[i];
         if (EntityA->HasComponent<ColliderComponent>()) {
@@ -90,7 +90,7 @@ void EntityManager::CollisionTrigger (EventManager& EventManager) {
                         #ifdef DEBUG
                             std::cout << "......COLLISION-DETECTED: between " << EntityA->name << " and "<< EntityB->name << std::endl; 
                         #endif
-                        EventManager.AddCollisionEvent(COLLISION, ColliderA->colliderTag, ColliderB->colliderTag);
+                        EventManager.AddCollisionEvent(COLLISION, ColliderA->colliderTag, ColliderB->colliderTag, sceneToLoad);
                         #ifdef DEBUG
                             std::cout << "......EVENTS-VECTOR-SIZE = " << EventManager.GetEventsSize() << std::endl;                         
                         #endif

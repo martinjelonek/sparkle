@@ -14,10 +14,13 @@ class EventManager {
         void CollisionEventCheck(Event& event);
         bool CollisionResolve(std::string tagA, std::string tagB);
     public:
-        bool gameStop = false;
+        bool gameLost = false;
+        bool gameWin = false;
+        int sceneToLoad = 0;
         EventManager();
         ~EventManager();
-        void AddCollisionEvent(EventType COLLISION, std::string colliderTagA, std::string colliderTagB);
+        void AddCollisionEvent(EventType COLLISION, std::string colliderTagA, std::string colliderTagB, int sceneToLoad);
+        void AddWinEvent(EventType WIN, int sceneToLoad);
         void HandleEvents();
         void DestroyAllEvents();
         unsigned int GetEventsSize() const;

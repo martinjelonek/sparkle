@@ -19,6 +19,7 @@ class Game {
     private:      
         SDL_Window *window;
         vec2 sceneSize;
+        int lostSceneNumber = 0;
         std::string key1 = "NULL";
         std::string key2 = "NULL";
         std::string keyEsc = "QUIT";

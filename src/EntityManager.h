@@ -25,7 +25,7 @@ class EntityManager {
         std::vector<Entity*> GetEntitiesByLayer(LayerType layer) const;
         Entity* GetEntitiesByName(std::string entityName) const;
         Entity& AddEntity(std::string entityName, LayerType layer);
-        void CollisionTrigger(EventManager& eventManager);
+        void CollisionTrigger(EventManager& eventManager, int sceneToLoad);
 };
 
 #endif

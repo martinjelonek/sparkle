@@ -3,7 +3,8 @@
 Scene2 = {
     conf = {
         sceneWidth = 1600,
-        sceneHeight = 1280
+        sceneHeight = 1280,
+        lostScene = 4
     },
     assets = {
         [0] = { type="texture", id = "terrain-fields", file = "./assets/tilemaps/fields.png"},
@@ -73,6 +74,9 @@ Scene2 = {
                         right = "d",
                         shoot = "space"
                     }
+                },
+                triggerWin = {
+                    sceneToLoad = 3
                 }
             }
         },

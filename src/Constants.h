@@ -13,7 +13,8 @@ const unsigned int FRAME_TARGET_TIME = 1000 / FPS;
 
 //EVENTS TYPE
 enum EventType {
-    COLLISION
+    COLLISION,
+    WIN
 };
 
 
