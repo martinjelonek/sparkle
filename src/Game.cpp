@@ -106,7 +106,7 @@ void Game::LoadScene(int sceneNumber) {
     #endif
     
     /****************************************************/
-    /* LOADING CONTROL FORM LUA CONFIG FILE             */
+    /* LOADING CONTROL FROM LUA CONFIG FILE             */
     /****************************************************/
     sol::table levelControl = levelData["control"];
     key1 = levelControl["keyboard"]["key1"];
@@ -276,7 +276,7 @@ void Game::LoadScene(int sceneNumber) {
                 std::string downKey = entity["components"]["input"]["keyboard"]["down"];
                 std::string leftKey = entity["components"]["input"]["keyboard"]["left"];
                 std::string shootKey = entity["components"]["input"]["keyboard"]["shoot"];
-                newEntity.AddComponent<KeyboardControlComponent>(upKey, rightKey, downKey, leftKey, shootKey);
+                newEntity.AddComponent<KeyboardControlComponent>(upKey, rightKey, downKey, leftKey, shootKey, sceneSize.x, sceneSize.y);
             }
             //add label component
             sol::optional<sol::table> existsLabelIndexNode = entity["components"]["label"];

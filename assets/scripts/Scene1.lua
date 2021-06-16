@@ -5,7 +5,7 @@
 --Data
 Scene1 = {
     conf = {
-        sceneWidth = 1600,
+        sceneWidth = 2560,
         sceneHeight = 1280
     },
     control = {
@@ -31,13 +31,39 @@ Scene1 = {
             layer = 5,
             components = {
                 label = {
-                    x = 50,
+                    x = 200,
                     y = 50,
-                    text = "wildhammer - info scene",
-                    fontFamily = "pixeldown39",
+                    text = "avoid enemys and reach right site of the map",
+                    fontFamily = "pixeldown19",
                     color = "WHITE_COLOR"
                 }
             }
-        }
+        },
+        [1] = {
+            name = "title",
+            layer = 5,
+            components = {
+                label = {
+                    x = 450,
+                    y = 200,
+                    text = "move keys: WSAD",
+                    fontFamily = "pixeldown19",
+                    color = "ORANGE_COLOR"
+                }
+            }
+        },
+        [2] = {
+            name = "title",
+            layer = 5,
+            components = {
+                label = {
+                    x = 400,
+                    y = 275,
+                    text = "press enter to start",
+                    fontFamily = "pixeldown19",
+                    color = "ORANGE_COLOR"
+                }
+            }
+        },
     }
 }

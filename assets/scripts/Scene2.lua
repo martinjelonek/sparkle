@@ -159,8 +159,8 @@ Scene2 = {
             components = {
                 transform = {
                     position = {
-                        x = 192,
-                        y = 320
+                        x = 350,
+                        y = 410
                     },
                     velocity = {
                         x = 10,
@@ -199,8 +199,8 @@ Scene2 = {
             components = {
                 transform = {
                     position = {
-                        x = 480,
-                        y = 384
+                        x = 450,
+                        y = 450
                     },
                     velocity = {
                         x = 0,
@@ -240,7 +240,7 @@ Scene2 = {
                 label = {
                     x = 5,
                     y = 5,
-                    text = "wildhammer",
+                    text = "wildhammer - level 1",
                     fontFamily = "pixeldown",
                     color = "WHITE_COLOR"
                 }
