@@ -5,8 +5,8 @@
 --Data
 Scene1 = {
     conf = {
-        sceneWidth = 2560,
-        sceneHeight = 1280,
+        sceneWidth = 1280,
+        sceneHeight = 720,
         lostScene = 4
     },
     control = {

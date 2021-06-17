@@ -5,8 +5,8 @@
 --Data
 Scene6 = {
     conf = {
-        sceneWidth = 1600,
-        sceneHeight = 1280,
+        sceneWidth = 1280,
+        sceneHeight = 720,
         lostScene = 4
     },
     control = {
@@ -191,7 +191,7 @@ Scene6 = {
                     mapTileSize = 32,
                     mapDefaultPositionX = -331,
                     mapDefaultPositionY = -31,
-                    mapToLoadName = "level0.map",
+                    mapToLoadName = "new-map-20x-20y.map",
                     mapToLoadSizeX = 20,
                     mapToLoadSizeY = 20
                 }

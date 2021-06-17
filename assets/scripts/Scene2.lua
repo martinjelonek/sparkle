@@ -2,7 +2,7 @@
 
 Scene2 = {
     conf = {
-        sceneWidth = 1600,
+        sceneWidth = 2560,
         sceneHeight = 1280,
         lostScene = 4
     },
