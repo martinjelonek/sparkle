@@ -26,7 +26,10 @@ class TriggerWinComponent: public Component {
 
         void Update(float deltaTime) override {
             #ifdef DEBUG
-                std::cout << "......UPDATE-TRIGGERWINCOMPONENT-" << this->owner->name << std::endl;
+                #include "../Constants.h"
+                if (SHOW_COMPONENTS_UPDATE) {
+                    std::cout << "......UPDATE-TRIGGERWINCOMPONENT-" << this->owner->name << std::endl;
+                }
             #endif
             if(transform->position.x + transform->width >= sceneWidth) eventManager->AddWinEvent(WIN, sceneToLoad);
         }

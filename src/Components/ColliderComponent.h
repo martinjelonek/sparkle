@@ -32,8 +32,11 @@ class ColliderComponent: public Component {
 
         void Update(float deltaTime) override {
             #ifdef DEBUG
-                std::cout << "......UPDATE-COLLIDERCOMPONENT-" << this->owner->name << std::endl;
+                if (SHOW_COMPONENTS_UPDATE) {
+                    std::cout << "......UPDATE-COLLIDERCOMPONENT-" << this->owner->name << std::endl;
+                }
             #endif
+            
             collider.x = static_cast<int>(transform->position.x);
             collider.y = static_cast<int>(transform->position.y);
             collider.w = static_cast<int>(transform->width * transform->scale);

@@ -1,6 +1,7 @@
 #ifndef SPRITECOMPONENT_H
 #define SPRITECOMPONENT_H
 
+#include "../Constants.h"
 #include "../AssetManager.h"
 #include "../TextureManager.h"
 #include "../Animation.h"
@@ -97,7 +98,9 @@ class SpriteComponent: public Component {
 
         void Update(float deltaTime) {
             #ifdef DEBUG
-                std::cout << "......UPDATE-SPRITE-" << this->owner->name << std::endl;
+                if (SHOW_COMPONENTS_UPDATE) {
+                    std::cout << "......UPDATE-SPRITE-" << this->owner->name << std::endl;
+                }
             #endif
             if (isAnimated) sourceRectangle.x = sourceRectangle.w * static_cast<int>((SDL_GetTicks() / animationSpeed) % numFrames);
             sourceRectangle.y = animationIndex * transform->height;
@@ -109,7 +112,9 @@ class SpriteComponent: public Component {
 
         void Render() override {
             #ifdef DEBUG
-                std::cout << "......RENDER-SPRITE-" << this->owner->name << std::endl; 
+                if (SHOW_COMPONENTS_RENDER) {
+                    std::cout << "......RENDER-SPRITE-" << this->owner->name << std::endl; 
+                }
             #endif
             TextureManager::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
         }

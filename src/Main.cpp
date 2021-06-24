@@ -13,9 +13,21 @@ int main(int argc, char *args[]) {
     game.Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     while(game.IsRunning()) {
+        #ifdef DEBUG
+                std::cout << "......MAINLOOP" << std::endl;
+        #endif
         game.ProcessInput();
+        #ifdef DEBUG
+                std::cout << "......AFTERPROCESS" << std::endl;
+        #endif
         game.Update();
+        #ifdef DEBUG
+                std::cout << "......AFTERUPDATE" << std::endl;
+        #endif
         game.Render();
+        #ifdef DEBUG
+                std::cout << "......AFTERRENDER" << std::endl;
+        #endif
         #ifdef DEBUG
             gameLoopCount++;
                 std::cout << std::endl;

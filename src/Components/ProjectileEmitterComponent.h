@@ -1,6 +1,7 @@
 #ifndef PROJECTILEEMITTERCOMPONENT_H
 #define PROJECTILEEMITTERCOMPONENT_H
 
+#include "../Constants.h"
 #include "../../lib/glm/glm.hpp"
 #include "../EntityManager.h"
 #include "../Components/TransformComponent.h"
@@ -41,7 +42,9 @@ class ProjectileEmitterComponent: public Component {
 
         void Update(float deltaTime) override {
             #ifdef DEBUG
-                std::cout << "......UPDATE-PROJECTILEEMITTER-" << this->owner->name << std::endl;
+                if (SHOW_COMPONENTS_UPDATE) {
+                    std::cout << "......UPDATE-PROJECTILEEMITTER-" << this->owner->name << std::endl;
+                }
             #endif
             if (glm::distance(transform->position, origin) > range) {
                 if(loop) {

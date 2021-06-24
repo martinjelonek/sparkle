@@ -1,6 +1,7 @@
 #include "./EntityManager.h"
 #include "./Event.h"
 #include "./Collision.h"
+#include "./Constants.h"
 #include "./Components/ColliderComponent.h"
 #include <iostream>
 
@@ -72,7 +73,9 @@ Entity& EntityManager::AddEntity(std::string entityName, LayerType layer) {
     Entity *entity = new Entity(*this, entityName, layer);
     entities.emplace_back(entity);
     #ifdef DEBUG
-        std::cout << "............ADDED-ENTITY: name = " << entityName << ", layer = " << layer << std::endl;
+        if (SHOW_ENTITY) {
+            std::cout << "............ADDED-ENTITY: name = " << entityName << ", layer = " << layer << std::endl;
+        }
     #endif
     return *entity;
 }
@@ -88,11 +91,15 @@ void EntityManager::CollisionTrigger (EventManager& EventManager, int sceneToLoa
                     ColliderComponent* ColliderB = EntityB->GetComponent<ColliderComponent>();
                     if (Collision::CheckRectangleCollision(ColliderA->collider, ColliderB->collider)) {
                         #ifdef DEBUG
-                            std::cout << "......COLLISION-DETECTED: between " << EntityA->name << " and "<< EntityB->name << std::endl; 
+                            if(SHOW_EVENTS) {
+                                std::cout << "......COLLISION-DETECTED: between " << EntityA->name << " and "<< EntityB->name << std::endl;
+                            }
                         #endif
                         EventManager.AddCollisionEvent(COLLISION, ColliderA->colliderTag, ColliderB->colliderTag, sceneToLoad);
                         #ifdef DEBUG
-                            std::cout << "......EVENTS-VECTOR-SIZE = " << EventManager.GetEventsSize() << std::endl;                         
+                            if (SHOW_EVENTS) {
+                                std::cout << "......EVENTS-VECTOR-SIZE = " << EventManager.GetEventsSize() << std::endl;
+                            }
                         #endif
                     }
                 }

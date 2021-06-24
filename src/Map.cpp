@@ -3,8 +3,8 @@
 #include "./Game.h"
 #include "./Map.h"
 #include "./EntityManager.h"
+#include "./Constants.h"
 #include "./Components/TileComponent.h"
-
 
 extern EntityManager manager;
 
@@ -27,11 +27,13 @@ void Map::LoadMap(std::string filePath, int mapSizeX, int mapSizeY) {
             int sourceRectY = atoi(&ch) * tileSize;
             AddTile(sourceRectX, sourceRectY, y * (scale * tileSize), x * (scale * tileSize));
             #ifdef DEBUG
-                std::cout   << ".........ADD-TILE: sRx = " << sourceRectX
-                            << ", sRy = " << sourceRectX
-                            << ", x = " << x * scale * tileSize
-                            << ", y = " << y * scale * tileSize
-                            << std::endl;
+                if (SHOW_MAP) {
+                    std::cout   << ".........ADD-TILE: sRx = " << sourceRectX
+                                << ", sRy = " << sourceRectX
+                                << ", x = " << x * scale * tileSize
+                                << ", y = " << y * scale * tileSize
+                                << std::endl;
+                }
             #endif
         }
     }
@@ -51,7 +53,9 @@ void Map::LoadMap(std::string mapTable[MAX_TILES_X][MAX_TILES_Y], int visibility
             }
             AddTile(txt, (mapTable[x][y][0] - 48) * tileSize, (mapTable[x][y][1] - 48) * tileSize, x * (scale * tileSize), y * (scale * tileSize), visibility);
             #ifdef DEBUG
-                std::cout << ".........ADD-TILE: mapTable[x][y] = " << mapTable[x][y] << ", X = " << mapTable[x][y][0] << ", Y = " << mapTable[x][y][1] << std::endl;
+                if (SHOW_MAP) {
+                    std::cout << ".........ADD-TILE: mapTable[x][y] = " << mapTable[x][y] << ", X = " << mapTable[x][y][0] << ", Y = " << mapTable[x][y][1] << std::endl;
+                }
             #endif
         }
     }
@@ -66,6 +70,8 @@ void Map::AddTile(std::string tileName, int sourceRectX, int sourceRectY, int x,
     Entity& newTile(manager.AddEntity(tileName, TILEMAP_LAYER));
     newTile.AddComponent<TileComponent>(sourceRectX, sourceRectY, x, y, tileSize, scale, textureId, visibility);
     #ifdef DEBUG
-                std::cout << "............ADD-TILE-COMPONENT: name = " << tileName << ", X = " << sourceRectX << ", Y = " << sourceRectY << std::endl;
+        if (SHOW_MAP) {
+            std::cout << "............ADD-TILE-COMPONENT: name = " << tileName << ", X = " << sourceRectX << ", Y = " << sourceRectY << std::endl;
+        }
     #endif
 }
