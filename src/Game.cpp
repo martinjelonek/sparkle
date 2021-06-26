@@ -11,6 +11,7 @@
 #include "./Components/ProjectileEmitterComponent.h"
 #include "./Components/RectangleComponent.h"
 #include "./Components/MapEditorComponent.h"
+#include "./Components/TriggerWinComponent.h"
 #include "../lib/glm/glm.hpp"
 #include <iostream>
 
@@ -38,7 +39,9 @@ bool Game::IsRunning() const {
 
 void Game::Initialize(int width, int height) {
     #ifdef DEBUG
-        std::cout << "...GAME.CPP::INITIALIZE-BEGIN" << std::endl;
+        if (SHOW_GAME) {
+            std::cout << "...GAME.CPP::INITIALIZE-BEGIN" << std::endl;
+        }
     #endif
 
     //initialize SDL
@@ -67,18 +70,29 @@ void Game::Initialize(int width, int height) {
 
     isRunning = true;
     #ifdef DEBUG
-        std::cout << "...GAME.CPP::INITIALIZE-END" << std::endl;
+        if(SHOW_GAME) {
+           std::cout << "...GAME.CPP::INITIALIZE-END" << std::endl;
+        }
     #endif
+
     return;
 }
 
 void Game::LoadScene(int sceneNumber) {
     #ifdef DEBUG
-        std::cout << "......GAME.CPP::LOADSCENE" << sceneNumber << "-BEGIN" << std::endl;
-        std::cout << ".........SOL-PREPARATION-BEGIN" << std::endl;
+        if(SHOW_GAME) {
+            std::cout << "......GAME.CPP::LOADSCENE" << sceneNumber << "-BEGIN" << std::endl;
+            std::cout << ".........SOL-PREPARATION-BEGIN" << std::endl;
+        }
     #endif
+
+    //Clear scene
+    manager.ClearData();
+    eventManager.DestroyAllEvents();
+
     //Camera reset
     Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+
     //Lua preparation
     sol::state lua;
     lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
@@ -89,8 +103,10 @@ void Game::LoadScene(int sceneNumber) {
     sol::table levelData = lua[sceneName];
     
     #ifdef DEBUG
-        std::cout << ".........SOL-PREPARATION-END" << std::endl;
-        std::cout << ".........SOL-LOADING-CONF-BEGIN" << std::endl;
+        if (SHOW_GAME) {
+            std::cout << ".........SOL-PREPARATION-END" << std::endl;
+            std::cout << ".........SOL-LOADING-CONF-BEGIN" << std::endl;
+        }
     #endif
     
     /****************************************************/
@@ -99,14 +115,17 @@ void Game::LoadScene(int sceneNumber) {
     sol::table levelConf = levelData["conf"];
     sceneSize.x = static_cast<int>(levelConf["sceneWidth"]);
     sceneSize.y = static_cast<int>(levelConf["sceneHeight"]);
+    lostSceneNumber = static_cast<int>(levelConf["lostScene"]);
 
     #ifdef DEBUG
-        std::cout << ".........SOL-LOADING-CONF-END" << std::endl;
-        std::cout << ".........SOL-LOADING-CONTROL-BEGIN" << std::endl;
+        if (SHOW_GAME) {
+            std::cout << ".........SOL-LOADING-CONF-END" << std::endl;
+            std::cout << ".........SOL-LOADING-CONTROL-BEGIN" << std::endl;
+        }
     #endif
     
     /****************************************************/
-    /* LOADING CONTROL FORM LUA CONFIG FILE             */
+    /* LOADING CONTROL FROM LUA CONFIG FILE             */
     /****************************************************/
     sol::table levelControl = levelData["control"];
     key1 = levelControl["keyboard"]["key1"];
@@ -115,8 +134,10 @@ void Game::LoadScene(int sceneNumber) {
     keyEnter = levelControl["keyboard"]["keyEnter"];
 
     #ifdef DEBUG
-        std::cout << ".........SOL-LOADING-CONTROL-END" << std::endl;
-        std::cout << ".........SOL-LOADING-ASSETS-BEGIN" << std::endl;
+        if (SHOW_GAME) {
+            std::cout << ".........SOL-LOADING-CONTROL-END" << std::endl;
+            std::cout << ".........SOL-LOADING-ASSETS-BEGIN" << std::endl;
+        }
     #endif
 
     /****************************************************/
@@ -137,14 +158,18 @@ void Game::LoadScene(int sceneNumber) {
                 std::string assetFile = asset["file"];
                 assetManager->AddTexture(assetId, assetFile.c_str());
                 #ifdef DEBUG
-                    std::cout << "............ADDED-ASSET: assetType = " << assetType << ", assetId = " << assetId << ", assetFile = " << assetFile << std::endl;
+                    if (SHOW_GAME) {
+                        std::cout << "............ADDED-ASSET: assetType = " << assetType << ", assetId = " << assetId << ", assetFile = " << assetFile << std::endl;
+                    }
                 #endif
             } else if (assetType.compare("font") == 0) {
                 std::string assetId = asset["id"];
                 std::string assetFile = asset["file"];
                 assetManager->AddFont(assetId, assetFile.c_str(), static_cast<int>(asset["fontSize"]));
                 #ifdef DEBUG
-                    std::cout << "............ADDED-ASSET: assetType = " << assetType << ", assetId = " << assetId << ", assetFile = " << assetFile << std::endl;
+                    if (SHOW_GAME) {
+                        std::cout << "............ADDED-ASSET: assetType = " << assetType << ", assetId = " << assetId << ", assetFile = " << assetFile << std::endl;
+                    }
                 #endif
             }
             assetsIndex++;
@@ -152,8 +177,10 @@ void Game::LoadScene(int sceneNumber) {
     }
 
     #ifdef DEBUG
-        std::cout << ".........SOL-LOADING-ASSETS-END" << std::endl;
-        std::cout << ".........SOL-LOADING-MAP-BEGIN" << std::endl;
+        if (SHOW_GAME) {
+            std::cout << ".........SOL-LOADING-ASSETS-END" << std::endl;
+            std::cout << ".........SOL-LOADING-MAP-BEGIN" << std::endl;
+        }
     #endif
 
     /****************************************************/
@@ -162,7 +189,9 @@ void Game::LoadScene(int sceneNumber) {
     sol::optional<sol::table> existsMapNode = levelData["map"];
     if(existsMapNode == sol::nullopt) {
         #ifdef DEBUG
-            std::cout << ".........SOL-MAPNOTDETECTED" << std::endl;
+            if (SHOW_GAME) {
+                std::cout << ".........SOL-MAPNOTDETECTED" << std::endl;
+            }
         #endif
     } else {
         sol::table levelMap = levelData["map"];
@@ -182,18 +211,20 @@ void Game::LoadScene(int sceneNumber) {
         );
 
         #ifdef DEBUG
-            std::string text = "";
-            std::cout << "............ADDED-MAP: mapTextureId = " << mapTextureId << ", mapFile = " << mapFile;
-            text = levelMap["scale"];
-            std::cout << ", scale = " << text;
-            text = levelMap["tileSize"];
-            std::cout << ", tileSize = " << text;
-            text = levelMap["mapSizeX"];
-            std::cout << ", mapSizeX = " << text;
-            text = levelMap["mapSizeY"];
-            std::cout << ", mapSizeY = " << text << std::endl;
-            std::cout << ".........SOL-LOADING-MAP-END" << std::endl;
-            std::cout << ".........SOL-LOADING-ENTITIES-BEGIN" << std::endl;
+            if (SHOW_GAME) {
+                std::string text = "";
+                std::cout << "............ADDED-MAP: mapTextureId = " << mapTextureId << ", mapFile = " << mapFile;
+                text = levelMap["scale"];
+                std::cout << ", scale = " << text;
+                text = levelMap["tileSize"];
+                std::cout << ", tileSize = " << text;
+                text = levelMap["mapSizeX"];
+                std::cout << ", mapSizeX = " << text;
+                text = levelMap["mapSizeY"];
+                std::cout << ", mapSizeY = " << text << std::endl;
+                std::cout << ".........SOL-LOADING-MAP-END" << std::endl;
+                std::cout << ".........SOL-LOADING-ENTITIES-BEGIN" << std::endl;
+            }
         #endif
     }    
 
@@ -207,12 +238,16 @@ void Game::LoadScene(int sceneNumber) {
         sol::optional<sol::table> existsEntitiesIndexNode = entities[entityIndex];
         if (existsEntitiesIndexNode == sol::nullopt) {
             #ifdef DEBUG
-                std::cout << ".........SOL-LOADING-ENTITIES-END" << std::endl;
+                if (SHOW_GAME) {
+                    std::cout << ".........SOL-LOADING-ENTITIES-END" << std::endl;
+                }
             #endif
             break;
         } else {
             #ifdef DEBUG
-                std::cout << "............LOADING-ENTITY-" << entityIndex << "-BEGIN" << std::endl;
+                if (SHOW_GAME) {
+                    std::cout << "............LOADING-ENTITY-" << entityIndex << "-BEGIN" << std::endl;
+                }
             #endif
             //add new entity
             sol::table entity = entities[entityIndex];
@@ -276,7 +311,7 @@ void Game::LoadScene(int sceneNumber) {
                 std::string downKey = entity["components"]["input"]["keyboard"]["down"];
                 std::string leftKey = entity["components"]["input"]["keyboard"]["left"];
                 std::string shootKey = entity["components"]["input"]["keyboard"]["shoot"];
-                newEntity.AddComponent<KeyboardControlComponent>(upKey, rightKey, downKey, leftKey, shootKey);
+                newEntity.AddComponent<KeyboardControlComponent>(upKey, rightKey, downKey, leftKey, shootKey, sceneSize.x, sceneSize.y);
             }
             //add label component
             sol::optional<sol::table> existsLabelIndexNode = entity["components"]["label"];
@@ -306,6 +341,17 @@ void Game::LoadScene(int sceneNumber) {
                     static_cast<int>(entity["components"]["rectangle"]["b"])
                 );
             }
+
+            //add trigger win component
+            sol::optional<sol::table> existsTriggerWinIndexNode = entity["components"]["triggerWin"];
+            if (existsTriggerWinIndexNode != sol::nullopt) {
+                newEntity.AddComponent<TriggerWinComponent>(
+                    &eventManager, 
+                    sceneSize.x,
+                    static_cast<int>(entity["components"]["triggerWin"]["sceneToLoad"])
+                );
+            }
+
             //add projectile entity
             sol::optional<sol::table> existsProjectileEmitterIndexNode = entity["components"]["projectileEmitter"];
             if (existsProjectileEmitterIndexNode != sol::nullopt) {
@@ -357,6 +403,7 @@ void Game::LoadScene(int sceneNumber) {
                 std::string labelNameY = entity["components"]["mapeditor"]["labelNameY"];
                 std::string fontFamily = entity["components"]["mapeditor"]["fontFamily"];
                 std::string mapTextureId = entity["components"]["mapeditor"]["mapTextureId"];
+                std::string mapToLoadName = entity["components"]["mapeditor"]["mapToLoadName"];
                 newEntity.AddComponent<MapEditorComponent>(
                     &manager,
                     labelNameX,
@@ -368,26 +415,32 @@ void Game::LoadScene(int sceneNumber) {
                     static_cast<int>(entity["components"]["mapeditor"]["mapScale"]),
                     static_cast<int>(entity["components"]["mapeditor"]["mapTileSize"]),
                     static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionX"]),
-                    static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionY"])
+                    static_cast<int>(entity["components"]["mapeditor"]["mapDefaultPositionY"]),
+                    mapToLoadName,
+                    static_cast<int>(entity["components"]["mapeditor"]["mapToLoadSizeX"]),
+                    static_cast<int>(entity["components"]["mapeditor"]["mapToLoadSizeY"])
                 );                
             }
 
             #ifdef DEBUG
-                std::cout << "............LOADING-ENTITY-" << entityIndex << "-END" << std::endl;
+                if (SHOW_GAME) {
+                    std::cout << "............LOADING-ENTITY-" << entityIndex << "-END" << std::endl;
+                }
             #endif
         }
         ++entityIndex;
         #ifdef DEBUG
-            std::cout << ".........entityIndex = " << entityIndex << std::endl;
+            if (SHOW_GAME) {
+                std::cout << ".........entityIndex = " << entityIndex << std::endl;
+            }
         #endif
     }
 
     #ifdef DEBUG
-        std::cout << "GAME.CPP-LOADSCENE" << sceneNumber << "-END" << std::endl;
+        if (SHOW_GAME) {
+            std::cout << "GAME.CPP-LOADSCENE" << sceneNumber << "-END" << std::endl;
+        }
     #endif
-
-    //get player entity (if exist)
-    player = manager.GetEntitiesByName("player");
 }
 
 void Game::ProcessInput() {
@@ -402,12 +455,13 @@ void Game::ProcessInput() {
         if(event.key.keysym.sym == SDLK_1) {
         
             #ifdef DEBUG
-                std::cout << "......KEY 1 PRESSED: value " << key1 << std::endl;
+                if (SHOW_GAME) {
+                    std::cout << "......KEY 1 PRESSED: value " << key1 << std::endl;
+                }
             #endif
+
             if (key1.compare("NULL") != 0) {
                 if(SDL_GetTicks() - sceneChangeCooldown > 500) {
-                    manager.ClearData();
-                    eventManager.DestroyAllEvents();
                     LoadScene(std::stoi(key1));
                     sceneChangeCooldown = SDL_GetTicks();
                 }
@@ -417,36 +471,41 @@ void Game::ProcessInput() {
         if(event.key.keysym.sym == SDLK_2) {
         
             #ifdef DEBUG
-                std::cout << "......KEY 2 PRESSED: value " << key1 << std::endl;
+                if (SHOW_GAME) {
+                    std::cout << "......KEY 2 PRESSED: value " << key1 << std::endl;
+                }
             #endif
+
             if (key2.compare("NULL") != 0) {
                 if(SDL_GetTicks() - sceneChangeCooldown > 500) {
-                    manager.ClearData();
-                    eventManager.DestroyAllEvents();
                     LoadScene(std::stoi(key2));
                     sceneChangeCooldown = SDL_GetTicks();
                 }                    
             }
         }
-        //KEY - ESC
+        //KEY - ENTER
         if(event.key.keysym.sym == SDLK_KP_ENTER || event.key.keysym.sym == SDLK_RETURN) {
             #ifdef DEBUG
-                std::cout << "......KEY ENTER PRESSED: value " << key1 << std::endl;
+                if (SHOW_GAME) {
+                    std::cout << "......KEY ENTER PRESSED: value " << key1 << std::endl;
+                }
             #endif
+
             if (keyEnter.compare("NULL") != 0) {
                 if(SDL_GetTicks() - sceneChangeCooldown > 500) {
-                    manager.ClearData();
-                    eventManager.DestroyAllEvents();
                     LoadScene(std::stoi(keyEnter));
                     sceneChangeCooldown = SDL_GetTicks();
                 }                
             }
         }
-        //KEY - ENTER
+        //KEY - ESC
         if(event.key.keysym.sym == SDLK_ESCAPE) {
             #ifdef DEBUG
-                std::cout << "......KEY ESC PRESSED: value " << keyEsc << std::endl;
+                if (SHOW_GAME) {
+                    std::cout << "......KEY ESC PRESSED: value " << keyEsc << std::endl;
+                }
             #endif
+
             if (keyEsc.compare("NULL") == 0) {
 
             } else if (keyEsc.compare("CLOSE") == 0) {
@@ -455,8 +514,6 @@ void Game::ProcessInput() {
                 }
             } else {
                 if(SDL_GetTicks() - sceneChangeCooldown > 500) {
-                    manager.ClearData();
-                    eventManager.DestroyAllEvents();
                     LoadScene(std::stoi(keyEsc));
                     sceneChangeCooldown = SDL_GetTicks();
                 }
@@ -469,6 +526,9 @@ void Game::ProcessInput() {
 }
 
 void Game::Update() {
+    //gat player entity if exist
+    player = manager.GetEntitiesByName("player");
+
     //sleep the execution until reach the target frame time (ms)
     int timeToWait = FRAME_TARGET_TIME - (SDL_GetTicks() - ticksLastFrame);
 
@@ -493,7 +553,14 @@ void Game::Update() {
     //events
     CheckCollisions();
     eventManager.HandleEvents();
-    if (eventManager.gameStop) isRunning = false;
+    if (eventManager.gameLost) {
+        eventManager.gameLost = false; //reset
+        LoadScene(eventManager.sceneToLoad);
+    }
+    if (eventManager.gameWin) {
+        eventManager.gameWin = false; //reset
+        LoadScene(eventManager.sceneToLoad);
+    }
 }
 
 void Game::Render() {
@@ -517,11 +584,20 @@ void Game::HandleCameraMovement () {
     camera.y = camera.y < 0 ? 0 : camera.y;
     camera.x = camera.x > (sceneSize.x - camera.w) ? (sceneSize.x - camera.w) : camera.x;
     camera.y = camera.y > (sceneSize.y - camera.h) ? (sceneSize.y - camera.h) : camera.y;
+
+        #ifdef DEBUG
+            if (SHOW_CAMERA) {
+                std::cout << "...CAMERA- " << mainPlayerTransform << ": x = " << camera.x << ", y =" << camera.y 
+                << ", player.x = " << mainPlayerTransform->position.x
+                << ", player.y = " << mainPlayerTransform->position.y
+                << std::endl;
+            }
+        #endif
     }
 }
 
 void Game::CheckCollisions () {
-    if(!manager.HasNoEntities()) manager.CollisionTrigger(eventManager);
+    if(!manager.HasNoEntities()) manager.CollisionTrigger(eventManager, lostSceneNumber);
 }
 
 void Game::Destroy() {

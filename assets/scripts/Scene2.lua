@@ -2,8 +2,9 @@
 
 Scene2 = {
     conf = {
-        sceneWidth = 1600,
-        sceneHeight = 1280
+        sceneWidth = 2560,
+        sceneHeight = 1280,
+        lostScene = 4
     },
     assets = {
         [0] = { type="texture", id = "terrain-fields", file = "./assets/tilemaps/fields.png"},
@@ -29,11 +30,11 @@ Scene2 = {
     },
     map = {
         textureAssetId = "terrain-fields",
-        file = "./assets/tilemaps/fields.map",
+        file = "./assets/tilemaps/level1.map",
         scale = 2,
         tileSize = 32,
-        mapSizeX = 25,
-        mapSizeY = 20
+        mapSizeX = 20,
+        mapSizeY = 40
     },
     entities = {
         [0] = {
@@ -73,6 +74,9 @@ Scene2 = {
                         right = "d",
                         shoot = "space"
                     }
+                },
+                triggerWin = {
+                    sceneToLoad = 3
                 }
             }
         },
@@ -82,11 +86,11 @@ Scene2 = {
             components = {
                 transform = {
                     position = {
-                        x = 96,
+                        x = 36,
                         y = 160
                     },
                     velocity = {
-                        x = 20,
+                        x = 0,
                         y = 0,
                     },
                     width = 32,
@@ -95,11 +99,8 @@ Scene2 = {
                     rotation = 0
                 },
                 sprite = {
-                    textureAssetId = "troops-moveing",
-                    animated = true,
-                    hasDirection = false;
-                    frameCount = 2,
-                    animationSpeed = 375,
+                    textureAssetId = "troops",
+                    animated = false,
                     fixed = false
                 },
                 collider = {
@@ -159,8 +160,8 @@ Scene2 = {
             components = {
                 transform = {
                     position = {
-                        x = 192,
-                        y = 320
+                        x = 350,
+                        y = 410
                     },
                     velocity = {
                         x = 10,
@@ -199,8 +200,8 @@ Scene2 = {
             components = {
                 transform = {
                     position = {
-                        x = 480,
-                        y = 384
+                        x = 450,
+                        y = 450
                     },
                     velocity = {
                         x = 0,
@@ -240,9 +241,283 @@ Scene2 = {
                 label = {
                     x = 5,
                     y = 5,
-                    text = "wildhammer",
+                    text = "wildhammer - level 1",
                     fontFamily = "pixeldown",
                     color = "WHITE_COLOR"
+                }
+            }
+        },
+        [6] = {
+            name = "troops-enemy-3",
+            layer = 2,
+            components = {
+                transform = {
+                    position = {
+                        x = 320,
+                        y = 192
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0
+                    },
+                    width = 32,
+                    height = 32,
+                    scale = 1,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "troops",
+                    animated = false,
+                    fixed = false
+                },
+                collider = {
+                    tag = "enemy"
+                },
+                projectileEmitter = {
+                    textureAssetId = "enemy-projectile",
+                    width = 20,
+                    height = 20,
+                    speed = 50,
+                    range = 200,
+                    angle = 100,
+                    loop = true
+                }
+            }
+        },
+        [7] = {
+            name = "troops-enemy-4",
+            layer = 2,
+            components = {
+                transform = {
+                    position = {
+                        x = 415,
+                        y = 41
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0
+                    },
+                    width = 32,
+                    height = 32,
+                    scale = 1,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "troops",
+                    animated = false,
+                    fixed = false
+                },
+                collider = {
+                    tag = "enemy"
+                },
+                projectileEmitter = {
+                    textureAssetId = "enemy-projectile",
+                    width = 20,
+                    height = 20,
+                    speed = 50,
+                    range = 200,
+                    angle = 76,
+                    loop = true
+                }
+            }
+        },
+        [8] = {
+            name = "ship-enemy-2",
+            layer = 2,
+            components = {
+                transform = {
+                    position = {
+                        x = 350,
+                        y = 650
+                    },
+                    velocity = {
+                        x = 20,
+                        y = 1,
+                    },
+                    width = 96,
+                    height = 64,
+                    scale = 1,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "ship",
+                    animated = true,
+                    hasDirection = false;
+                    frameCount = 2,
+                    animationSpeed = 1000,
+                    fixed = false
+                },
+                collider = {
+                    tag = "enemy"
+                },
+                projectileEmitter = {
+                    textureAssetId = "enemy-projectile",
+                    width = 20,
+                    height = 20,
+                    speed = 50,
+                    range = 200,
+                    angle = 275,
+                    loop = true
+                }
+            }
+        },
+        [9] = {
+            name = "tower-enemy-2",
+            layer = 2,
+            components = {
+                transform = {
+                    position = {
+                        x = 1060,
+                        y = 350
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0,
+                    },
+                    width = 32,
+                    height = 64,
+                    scale = 1,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "tower",
+                    animated = true,
+                    hasDirection = false;
+                    frameCount = 2,
+                    animationSpeed = 700,
+                    fixed = false
+                },
+                collider = {
+                    tag = "enemy"
+                },
+                projectileEmitter = {
+                    textureAssetId = "enemy-projectile",
+                    width = 20,
+                    height = 20,
+                    speed = 50,
+                    range = 200,
+                    angle = 135,
+                    loop = true
+                }
+            }
+        },
+        [10] = {
+            name = "tower-enemy-3",
+            layer = 2,
+            components = {
+                transform = {
+                    position = {
+                        x = 1060,
+                        y = 200
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0,
+                    },
+                    width = 32,
+                    height = 64,
+                    scale = 1,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "tower",
+                    animated = true,
+                    hasDirection = false;
+                    frameCount = 2,
+                    animationSpeed = 700,
+                    fixed = false
+                },
+                collider = {
+                    tag = "enemy"
+                },
+                projectileEmitter = {
+                    textureAssetId = "enemy-projectile",
+                    width = 20,
+                    height = 20,
+                    speed = 50,
+                    range = 200,
+                    angle = 225,
+                    loop = true
+                }
+            }
+        },
+        [11] = {
+            name = "tower-enemy-4",
+            layer = 2,
+            components = {
+                transform = {
+                    position = {
+                        x = 1210,
+                        y = 200
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0,
+                    },
+                    width = 32,
+                    height = 64,
+                    scale = 1,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "tower",
+                    animated = true,
+                    hasDirection = false;
+                    frameCount = 2,
+                    animationSpeed = 700,
+                    fixed = false
+                },
+                collider = {
+                    tag = "enemy"
+                },
+                projectileEmitter = {
+                    textureAssetId = "enemy-projectile",
+                    width = 20,
+                    height = 20,
+                    speed = 50,
+                    range = 200,
+                    angle = 275,
+                    loop = true
+                }
+            }
+        },
+        [12] = {
+            name = "tower-enemy-5",
+            layer = 2,
+            components = {
+                transform = {
+                    position = {
+                        x = 1210,
+                        y = 350
+                    },
+                    velocity = {
+                        x = 0,
+                        y = 0,
+                    },
+                    width = 32,
+                    height = 64,
+                    scale = 1,
+                    rotation = 0
+                },
+                sprite = {
+                    textureAssetId = "tower",
+                    animated = true,
+                    hasDirection = false;
+                    frameCount = 2,
+                    animationSpeed = 700,
+                    fixed = false
+                },
+                collider = {
+                    tag = "enemy"
+                },
+                projectileEmitter = {
+                    textureAssetId = "enemy-projectile",
+                    width = 20,
+                    height = 20,
+                    speed = 50,
+                    range = 200,
+                    angle = 45,
+                    loop = true
                 }
             }
         }

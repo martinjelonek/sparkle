@@ -41,7 +41,10 @@ class TransformComponent: public Component {
 
         void Update(float deltaTime) override {
             #ifdef DEBUG
-                std::cout << "......UPDATE-TRANSFORMCOMPONENT-" << this->owner->name << std::endl;
+                #include "../Constants.h"
+                if (SHOW_COMPONENTS_UPDATE) {
+                    std::cout << "......UPDATE-TRANSFORMCOMPONENT-" << this->owner->name << std::endl;
+                }
             #endif
             position.x += velocity.x * deltaTime;
             position.y += velocity.y * deltaTime;

@@ -13,7 +13,8 @@ const unsigned int FRAME_TARGET_TIME = 1000 / FPS;
 
 //EVENTS TYPE
 enum EventType {
-    COLLISION
+    COLLISION,
+    WIN
 };
 
 
@@ -44,9 +45,21 @@ const unsigned int MAX_TILES_Y = 100;
 
 //SETTINGS (DEBUG ONLY)
 #ifdef DEBUG
+    //ADDITIONAL RENDER IN GAME
     const bool SHOW_COLLIDER_BOX = false;
     const bool SHOW_TRANSFORM_BOX = false;
-    const bool SHOW_TEXTURE_RENDER_INFO = false; // TextureManager.cpp
+
+    //TEXT TO PRINT IN CONSOLE
+
+    const bool SHOW_TEXTURE_RENDER_INFO =           false;      // TextureManager.cpp
+    const bool SHOW_ENTITY =                        false;      // Entity.cpp | EntityManager.cpp
+    const bool SHOW_EVENTS =                        false;      // EntityManager.cpp
+    const bool SHOW_GAME =                          false;      // Game.cpp
+    const bool SHOW_CAMERA =                        true;       // Game.cpp
+    const bool SHOW_MAP =                           false;      // Map.cpp
+    const bool SHOW_COMPONENTS_UPDATE =             false;      // Components->Update()
+    const bool SHOW_COMPONENTS_RENDER =             false;      // Components->Render()
+
 #endif
 
 #endif

@@ -5,8 +5,9 @@
 --Data
 Scene5 = {
     conf = {
-        sceneWidth = 1600,
-        sceneHeight = 1280
+        sceneWidth = 1280,
+        sceneHeight = 720,
+        lostScene = 4
     },
     control = {
         keyboard = {
@@ -17,7 +18,7 @@ Scene5 = {
             --set scene number, CLOSE for close the app or NULL
             keyEsc = "0",
             --set scene number or NULL
-            keyEnter = "NULL"
+            keyEnter = "2"
         }
     },
     assets = {
@@ -31,11 +32,37 @@ Scene5 = {
             layer = 5,
             components = {
                 label = {
-                    x = 50,
-                    y = 50,
-                    text = "wildhammer - win",
+                    x = 480,
+                    y = 200,
+                    text = "you win!",
                     fontFamily = "pixeldown39",
                     color = "WHITE_COLOR"
+                }
+            }
+        },
+        [1] = {
+            name = "label-restart",
+            layer = 5,
+            components = {
+                label = {
+                    x = 410,
+                    y = 330,
+                    text = "press enter to restart",
+                    fontFamily = "pixeldown19",
+                    color = "ORANGE_COLOR"
+                }
+            }
+        },
+        [2] = {
+            name = "label-exit",
+            layer = 5,
+            components = {
+                label = {
+                    x = 470,
+                    y = 380,
+                    text = "press esc to exit",
+                    fontFamily = "pixeldown19",
+                    color = "ORANGE_COLOR"
                 }
             }
         }

@@ -1,4 +1,5 @@
 #include "./Entity.h"
+#include "./Constants.h"
 #include <iostream>
 
 Entity::Entity(EntityManager& manager): manager(manager) {

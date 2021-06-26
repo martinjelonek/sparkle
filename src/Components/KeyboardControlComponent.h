@@ -16,6 +16,8 @@ class KeyboardControlComponent: public Component {
         std::string shootKey;
         TransformComponent *transform;
         SpriteComponent *sprite;
+        int sceneWidth;
+        int sceneHeight;
 
         KeyboardControlComponent () {
             #ifdef DEBUG
@@ -23,19 +25,24 @@ class KeyboardControlComponent: public Component {
             #endif
         }
 
-        KeyboardControlComponent (std::string upKey, std::string rightKey, std::string downKey, std::string leftKey, std::string shootKey) {
+        KeyboardControlComponent (std::string upKey, std::string rightKey, std::string downKey, std::string leftKey, std::string shootKey,
+                                    int sceneWidth, int sceneHeight) {
             this->upKey = GetSDLKeyStringCode(upKey);
             this->rightKey = GetSDLKeyStringCode(rightKey);
             this->downKey = GetSDLKeyStringCode(downKey);
             this->leftKey = GetSDLKeyStringCode(leftKey);
             this->shootKey = GetSDLKeyStringCode(shootKey);
+            this->sceneWidth = sceneWidth;
+            this->sceneHeight = sceneHeight;
             #ifdef DEBUG
                 std::cout << "...............ADDED-KEYBOARDCONTROLCOMPONENT: " 
                 << "upKey = " << upKey 
                 << ", rightKey = " << rightKey
                 << ", downKey = " << downKey
                 << ", leftKey = " << leftKey
-                << "shootKey" << shootKey
+                << ", shootKey = " << shootKey
+                << ", sceneWidth = " << sceneWidth
+                << ", sceneHeight = " << sceneHeight
                 << std::endl;
             #endif
         }
@@ -69,7 +76,7 @@ class KeyboardControlComponent: public Component {
                     sprite->Play("UpAnimation");
                 }
                 if(keyCode.compare(rightKey) == 0) {
-                    if (transform->position.x + transform->width >= 1000) {
+                    if (transform->position.x + transform->width >= sceneWidth) {
                         transform->velocity.y = 0;
                         transform->velocity.x = 0;
                     } else {
@@ -79,7 +86,7 @@ class KeyboardControlComponent: public Component {
                     sprite->Play("RightAnimation");
                 }
                 if(keyCode.compare(downKey) == 0) {
-                    if (transform->position.y + transform->height >= 1000) {
+                    if (transform->position.y + transform->height >= sceneHeight) {
                         transform->velocity.y = 0;
                         transform->velocity.x = 0;
                     } else {

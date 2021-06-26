@@ -19,8 +19,9 @@ BottomLineY = 690
 --Data
 Scene0 = {
     conf = {
-        sceneWidth = 1600,
-        sceneHeight = 1280
+        sceneWidth = 1280,
+        sceneHeight = 720,
+        lostScene = 4
     },
     control = {
         keyboard = {
